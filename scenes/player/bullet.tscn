@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://b2uydjo7phw5n"]
+
+[ext_resource type="Script" path="res://scenes/player/bullet.gd" id="1_u1o55"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_f7buw"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gk3oj"]
+radius = 1.5
+height = 15.0
+
+[node name="Bullet" type="Area2D"]
+collision_layer = 16
+collision_mask = 12
+script = ExtResource("1_u1o55")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("CanvasTexture_f7buw")
+region_enabled = true
+region_rect = Rect2(0, 0, 3, 15)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_gk3oj")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -1,0 +1,125 @@
+[gd_scene load_steps=13 format=3 uid="uid://bfma08bavkmdm"]
+
+[ext_resource type="Script" path="res://scenes/level.gd" id="1_8v4wn"]
+[ext_resource type="PackedScene" uid="uid://cxldcoan216o" path="res://scenes/player/player.tscn" id="1_d4vq7"]
+[ext_resource type="PackedScene" uid="uid://dfb0wykk6db8c" path="res://scenes/ball/ball.tscn" id="2_po7ey"]
+[ext_resource type="AudioStream" uid="uid://c226i0e71lehm" path="res://audio/error_007.wav" id="7_3mjxc"]
+[ext_resource type="PackedScene" uid="uid://6xjxss6atj0t" path="res://scenes/wall/wall.tscn" id="7_ci603"]
+[ext_resource type="Texture2D" uid="uid://4gec70uapel0" path="res://sprites/level-plate.png" id="7_yv7bc"]
+[ext_resource type="PackedScene" uid="uid://dm8rnl3goq082" path="res://scenes/piston.tscn" id="8_28yeh"]
+[ext_resource type="Script" path="res://scenes/Levels.gd" id="8_gsv7w"]
+[ext_resource type="AudioStream" uid="uid://nab6gdrrhs7i" path="res://audio/confirmation_001.wav" id="8_nicdy"]
+[ext_resource type="PackedScene" uid="uid://demovhs4x77nr" path="res://scenes/wall/gate.tscn" id="11_ixyyn"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_v6gdb"]
+line_spacing = 0.0
+font_size = 44
+outline_size = 1
+outline_color = Color(0.0627451, 0.0627451, 0.0627451, 1)
+shadow_size = 4
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(4, 4)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vq31d"]
+size = Vector2(1000, 88)
+
+[node name="Level" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_8v4wn")
+
+[node name="Bricks" type="Node2D" parent="."]
+
+[node name="Bonuses" type="Node2D" parent="."]
+
+[node name="Balls" type="Node2D" parent="."]
+visible = false
+
+[node name="Ball" parent="Balls" instance=ExtResource("2_po7ey")]
+position = Vector2(307, 606)
+
+[node name="Wall" parent="." instance=ExtResource("7_ci603")]
+
+[node name="Levels" type="Node2D" parent="."]
+script = ExtResource("8_gsv7w")
+
+[node name="LevelPanel" type="Sprite2D" parent="."]
+visible = false
+texture_filter = 1
+position = Vector2(374, 565)
+texture = ExtResource("7_yv7bc")
+region_rect = Rect2(0, 0, 375, 50)
+
+[node name="Label" type="Label" parent="LevelPanel"]
+offset_left = -186.0
+offset_top = -34.0
+offset_right = 186.0
+offset_bottom = 27.0
+text = "LEVEL"
+label_settings = SubResource("LabelSettings_v6gdb")
+horizontal_alignment = 1
+
+[node name="Piston" parent="." instance=ExtResource("8_28yeh")]
+visible = false
+position = Vector2(378, 744)
+
+[node name="OutOfField" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 18
+input_pickable = false
+
+[node name="AudioOut" type="AudioStreamPlayer" parent="OutOfField"]
+stream = ExtResource("7_3mjxc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OutOfField"]
+position = Vector2(374, 785)
+shape = SubResource("RectangleShape2D_vq31d")
+
+[node name="AudioSuccess" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_nicdy")
+
+[node name="Gates" type="Node2D" parent="."]
+visible = false
+
+[node name="GateLeft1" parent="Gates" instance=ExtResource("11_ixyyn")]
+position = Vector2(14, 138)
+
+[node name="GateLeft2" parent="Gates" instance=ExtResource("11_ixyyn")]
+position = Vector2(14, 311)
+
+[node name="GateLeft3" parent="Gates" instance=ExtResource("11_ixyyn")]
+position = Vector2(14, 499)
+
+[node name="GateLeft4" parent="Gates" instance=ExtResource("11_ixyyn")]
+position = Vector2(14, 675)
+
+[node name="GateRight1" parent="Gates" instance=ExtResource("11_ixyyn")]
+position = Vector2(734, 138)
+
+[node name="GateRight2" parent="Gates" instance=ExtResource("11_ixyyn")]
+position = Vector2(734, 311)
+
+[node name="GateRight3" parent="Gates" instance=ExtResource("11_ixyyn")]
+position = Vector2(734, 499)
+
+[node name="GateRight4" parent="Gates" instance=ExtResource("11_ixyyn")]
+position = Vector2(734, 675)
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Player" parent="." instance=ExtResource("1_d4vq7")]
+visible = false
+position = Vector2(374, 675)
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="wall_ready" from="Wall" to="." method="_on_wall_ready"]
+[connection signal="bottom" from="Piston" to="." method="_on_piston_bottom"]
+[connection signal="top" from="Piston" to="." method="_on_piston_top"]
+[connection signal="body_entered" from="OutOfField" to="." method="_on_out_of_field_body_entered"]
+[connection signal="finished" from="AudioSuccess" to="." method="_on_audio_success_finished"]
+[connection signal="finish" from="Gates/GateRight4" to="." method="_on_gate_finish"]
+[connection signal="active" from="Player" to="." method="_on_player_active"]
+[connection signal="falled" from="Player" to="." method="_on_player_falled"]
+[connection signal="fire" from="Player" to="." method="_on_player_fire"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

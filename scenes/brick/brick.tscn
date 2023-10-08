@@ -1,0 +1,98 @@
+[gd_scene load_steps=14 format=3 uid="uid://dlcesmq2jupck"]
+
+[ext_resource type="Script" path="res://scenes/brick/brick.gd" id="1_xt5vc"]
+[ext_resource type="Texture2D" uid="uid://be8mi47s6rs6w" path="res://sprites/bricks/brick.png" id="2_cluob"]
+[ext_resource type="Texture2D" uid="uid://drd7756cwl2vt" path="res://sprites/bricks/brick-static.png" id="3_1d13j"]
+[ext_resource type="AudioStream" uid="uid://ccvdp3j2c68el" path="res://audio/brick_hit.wav" id="4_b8ncb"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_k1hqj"]
+bounce = 1.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7jqrj"]
+atlas = ExtResource("3_1d13j")
+region = Rect2(0, 156, 54, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kjbc1"]
+atlas = ExtResource("3_1d13j")
+region = Rect2(0, 130, 54, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_belsu"]
+atlas = ExtResource("3_1d13j")
+region = Rect2(0, 104, 54, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5qinn"]
+atlas = ExtResource("3_1d13j")
+region = Rect2(0, 78, 54, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0glpm"]
+atlas = ExtResource("3_1d13j")
+region = Rect2(0, 52, 54, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hvc6w"]
+atlas = ExtResource("3_1d13j")
+region = Rect2(0, 26, 54, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aigq6"]
+atlas = ExtResource("3_1d13j")
+region = Rect2(0, 0, 54, 25)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_18ohy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7jqrj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kjbc1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_belsu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5qinn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0glpm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hvc6w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aigq6")
+}],
+"loop": false,
+"name": &"ice",
+"speed": 15.0
+}]
+
+[node name="Brick" type="StaticBody2D"]
+collision_layer = 4
+collision_mask = 11
+physics_material_override = SubResource("PhysicsMaterial_k1hqj")
+script = ExtResource("1_xt5vc")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-22, -12, 22, -12, 27, -7, 27, 7, 22, 12, -22, 12, -27, 7, -27, -7)
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 11
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Area2D"]
+polygon = PackedVector2Array(-22, -12, 22, -12, 27, -7, 27, 7, 22, 12, -22, 12, -27, 7, -27, -7)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_cluob")
+region_rect = Rect2(0, 0, 66, 28)
+
+[node name="Animations" type="AnimatedSprite2D" parent="."]
+visible = false
+sprite_frames = SubResource("SpriteFrames_18ohy")
+animation = &"ice"
+
+[node name="AudioCrash" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_b8ncb")
+
+[connection signal="body_shape_entered" from="Area2D" to="." method="_on_area_2d_body_shape_entered"]
+[connection signal="finished" from="AudioCrash" to="." method="_on_audio_crash_finished"]

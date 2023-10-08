@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://c5wfc6xvqmtdu"]
+
+[ext_resource type="Script" path="res://scenes/bonus/Bonus.gd" id="1_sukl6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_435y0"]
+size = Vector2(54, 25)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_j6ktf"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_47b7s"]
+line_spacing = 0.0
+font_size = 23
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 5
+shadow_color = Color(0, 0, 0, 0.490196)
+
+[node name="Bonus" type="Area2D"]
+collision_layer = 16
+script = ExtResource("1_sukl6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_435y0")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+self_modulate = Color(0, 1, 1, 1)
+texture = SubResource("CanvasTexture_j6ktf")
+region_enabled = true
+region_rect = Rect2(0, 0, 54, 25)
+
+[node name="Label" type="Label" parent="Sprite2D"]
+offset_left = -27.0
+offset_top = -17.0
+offset_right = 27.0
+offset_bottom = 15.0
+text = "A"
+label_settings = SubResource("LabelSettings_47b7s")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

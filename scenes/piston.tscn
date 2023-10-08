@@ -1,0 +1,126 @@
+[gd_scene load_steps=16 format=3 uid="uid://dm8rnl3goq082"]
+
+[ext_resource type="Script" path="res://scenes/Piston.gd" id="1_pqrc4"]
+[ext_resource type="Texture2D" uid="uid://bvn70dg3nwodp" path="res://sprites/piston/piston-1.png" id="2_5vqyg"]
+[ext_resource type="Texture2D" uid="uid://cryt2ni4sjxe" path="res://sprites/piston/piston-2.png" id="3_oeyi5"]
+[ext_resource type="Texture2D" uid="uid://bk1o4uakkawvu" path="res://sprites/piston/piston-3.png" id="4_pvq4g"]
+[ext_resource type="Texture2D" uid="uid://cnyco7vmlq21q" path="res://sprites/piston/piston-4.png" id="5_owu8e"]
+[ext_resource type="Texture2D" uid="uid://bumbfkhunaajm" path="res://sprites/piston/piston-head.png" id="6_fnph6"]
+[ext_resource type="Texture2D" uid="uid://dy1uche6pju1b" path="res://sprites/piston/piston-head-3.png" id="7_40764"]
+[ext_resource type="Texture2D" uid="uid://of1tqa0exlmo" path="res://sprites/piston/lights.png" id="7_c3boh"]
+[ext_resource type="Texture2D" uid="uid://x3ilnf3ertaq" path="res://sprites/piston/piston-head-2.png" id="8_cs2c2"]
+[ext_resource type="Texture2D" uid="uid://dr0if60xax4jk" path="res://sprites/piston/piston-head-1.png" id="9_poiay"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_0quf4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0q2yw"]
+atlas = ExtResource("7_c3boh")
+region = Rect2(130, 0, 64, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dsvt7"]
+atlas = ExtResource("7_c3boh")
+region = Rect2(65, 0, 64, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dumeb"]
+atlas = ExtResource("7_c3boh")
+region = Rect2(0, 0, 64, 18)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fj5jr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0q2yw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dsvt7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dumeb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0q2yw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0q2yw")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Piston" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_pqrc4")
+
+[node name="Cover" type="Sprite2D" parent="."]
+self_modulate = Color(0, 0, 0, 1)
+position = Vector2(-4, 10)
+texture = SubResource("CanvasTexture_0quf4")
+region_enabled = true
+region_rect = Rect2(0, 0, 692, 20)
+
+[node name="Piston1" type="Sprite2D" parent="."]
+position = Vector2(0, 70)
+texture = ExtResource("2_5vqyg")
+region_enabled = true
+region_rect = Rect2(0, 0, 55, 1)
+
+[node name="Piston2" type="Sprite2D" parent="."]
+position = Vector2(0, 54)
+texture = ExtResource("3_oeyi5")
+region_enabled = true
+region_rect = Rect2(0, 0, 48, 1)
+
+[node name="Piston3" type="Sprite2D" parent="."]
+position = Vector2(0, 37)
+texture = ExtResource("4_pvq4g")
+region_enabled = true
+region_rect = Rect2(0, 0, 41, 1)
+
+[node name="Piston4" type="Sprite2D" parent="."]
+texture_repeat = 2
+position = Vector2(0, 21)
+texture = ExtResource("5_owu8e")
+region_enabled = true
+region_rect = Rect2(0, 0, 34, 1)
+
+[node name="PistonHead" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-5, 0)
+texture = ExtResource("6_fnph6")
+region_enabled = true
+region_rect = Rect2(0, 0, 692, 41)
+
+[node name="Light1" type="AnimatedSprite2D" parent="PistonHead"]
+position = Vector2(32, -7)
+sprite_frames = SubResource("SpriteFrames_fj5jr")
+
+[node name="Light2" type="AnimatedSprite2D" parent="PistonHead"]
+position = Vector2(100, -7)
+sprite_frames = SubResource("SpriteFrames_fj5jr")
+
+[node name="Light3" type="AnimatedSprite2D" parent="PistonHead"]
+position = Vector2(169, -7)
+sprite_frames = SubResource("SpriteFrames_fj5jr")
+
+[node name="Light4" type="AnimatedSprite2D" parent="PistonHead"]
+position = Vector2(237, -7)
+sprite_frames = SubResource("SpriteFrames_fj5jr")
+
+[node name="Light5" type="AnimatedSprite2D" parent="PistonHead"]
+position = Vector2(306, -7)
+sprite_frames = SubResource("SpriteFrames_fj5jr")
+
+[node name="PistonHead3" type="Sprite2D" parent="."]
+position = Vector2(0, 29)
+texture = ExtResource("7_40764")
+
+[node name="PistonHead2" type="Sprite2D" parent="."]
+position = Vector2(0, 46)
+texture = ExtResource("8_cs2c2")
+
+[node name="PistonHead1" type="Sprite2D" parent="."]
+position = Vector2(0, 62)
+texture = ExtResource("9_poiay")
+region_enabled = true
+region_rect = Rect2(0, 0, 69, 16)

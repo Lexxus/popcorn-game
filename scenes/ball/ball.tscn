@@ -1,0 +1,99 @@
+[gd_scene load_steps=14 format=3 uid="uid://dfb0wykk6db8c"]
+
+[ext_resource type="Script" path="res://scenes/ball/ball.gd" id="1_hw28v"]
+[ext_resource type="Texture2D" uid="uid://pfdf7r1sdook" path="res://sprites/parashute.png" id="2_8ehss"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_couyr"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_eqydc"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_ouoa7"]
+radius = 8.0
+height = 16.0
+
+[sub_resource type="MeshTexture" id="MeshTexture_bum43"]
+mesh = SubResource("SphereMesh_ouoa7")
+base_texture = SubResource("CanvasTexture_eqydc")
+image_size = Vector2(16, 16)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vntpr"]
+radius = 8.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uc8vd"]
+atlas = ExtResource("2_8ehss")
+region = Rect2(0, 0, 58, 58)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_osim5"]
+atlas = ExtResource("2_8ehss")
+region = Rect2(59, 0, 58, 58)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k0r5p"]
+atlas = ExtResource("2_8ehss")
+region = Rect2(118, 0, 58, 58)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wsl0f"]
+atlas = ExtResource("2_8ehss")
+region = Rect2(177, 0, 58, 58)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_whmty"]
+atlas = ExtResource("2_8ehss")
+region = Rect2(236, 0, 58, 58)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jtftp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uc8vd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_osim5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k0r5p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_osim5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uc8vd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wsl0f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_whmty")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wsl0f")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Ball" type="RigidBody2D" groups=["destructor"]]
+texture_filter = 1
+collision_layer = 2
+collision_mask = 13
+mass = 0.08
+physics_material_override = SubResource("PhysicsMaterial_couyr")
+gravity_scale = 0.0
+can_sleep = false
+lock_rotation = true
+freeze_mode = 1
+linear_damp_mode = 1
+script = ExtResource("1_hw28v")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("MeshTexture_bum43")
+centered = false
+region_rect = Rect2(0, 0, 10, 10)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_vntpr")
+
+[node name="Parashute" type="AnimatedSprite2D" parent="."]
+visible = false
+sprite_frames = SubResource("SpriteFrames_jtftp")
