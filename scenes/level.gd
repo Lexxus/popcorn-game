@@ -10,19 +10,22 @@ signal live_remove()
 const BALL_SLOW_SPEED = 300
 
 var brick_scene = preload("res://scenes/brick/brick.tscn")
-var bonus_scene = preload("res://scenes/bonus/bonus.tscn")
 var brick_crash_scene = preload("res://scenes/brick/brick_crash.tscn")
+var bonus_scene = preload("res://scenes/bonus/bonus.tscn")
 var bullet_scene = preload("res://scenes/player/bullet.tscn")
 
 var level: int = 1
 var balls: int = 1
 var is_ready_to_start := false
+var is_game_active := false
+
+@export var max_enemies: int = 4
 
 var handler_gate_finish := ""
-var handler_timer_timeout := ""
 
-@onready var balls_node = $Balls
-@onready var player = $Player
+@onready var balls_node := $Balls as Node2D
+@onready var player := $Player as CharacterBody2D
+@onready var timer := $Timer as Timer
 
 
 func _ready():
@@ -35,6 +38,8 @@ func _process(_delta):
 		var ball := balls_node.get_child(0) as RigidBody2D
 		ball.reset_speed()
 		ball.start(-PI / 2, player.position)
+		is_game_active = true
+		timer.start()
 
 
 func start():
@@ -43,10 +48,17 @@ func start():
 
 
 func stop():
+	is_game_active = false
+	timer.stop()
+	# kill all enemies
+	for gate in $Gates.get_children():
+		gate.kill_enemy()
+	# remove extra balls
 	var is_extra := false
 	for ball in balls_node.get_children():
 		ball.stop()
 		if is_extra:
+			balls_node.remove_child(ball)
 			ball.queue_free()
 		else:
 			is_extra = true
@@ -68,6 +80,7 @@ func next_level():
 
 
 func apply_bonus(bonus: Lib.Bonus):
+	if not is_game_active: return
 	match bonus:
 		Lib.Bonus.EXTEND:
 			player.set_extend_mode()
@@ -124,11 +137,7 @@ func player_roll_in(_body):
 	live_remove.emit()
 	player.show()
 	player.roll_in($Gates/GateRight4.position)
-	handler_timer_timeout = "close_gate"
-	$Timer.start()
-
-
-func close_gate():
+	await get_tree().create_timer(1.0).timeout
 	$Gates/GateRight4.close()
 
 
@@ -146,6 +155,8 @@ func _on_piston_bottom():
 func _on_player_fire(body: CharacterBody2D):
 	var bullet1 := bullet_scene.instantiate() as Area2D
 	var bullet2 := bullet_scene.instantiate() as Area2D
+	bullet1.add_to_group(&"destructor")
+	bullet2.add_to_group(&"destructor")
 	$Bonuses.add_child(bullet1)
 	$Bonuses.add_child(bullet2)
 	bullet1.connect("hit", _on_bullet_hit)
@@ -169,9 +180,10 @@ func _on_gate_finish(body):
 
 
 func _on_timer_timeout():
-	if handler_timer_timeout != "":
-		callv(handler_timer_timeout, [])
-		handler_timer_timeout = ""
+	if not is_game_active: return
+	for i in max_enemies:
+		var gate = $Gates.get_child(i)
+		gate.create_enemy()
 
 
 func _on_player_active():
@@ -209,6 +221,7 @@ func _on_brick_crashed(body: StaticBody2D):
 func _on_out_of_field_body_entered(body):
 	if body.is_class("RigidBody2D"):
 		if balls_node.get_child_count() == 1:
+			if not is_game_active: return
 			$OutOfField/AudioOut.play()
 			$Player.fall()
 		else:

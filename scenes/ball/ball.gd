@@ -12,7 +12,7 @@ var is_speed_correction := false
 var to_angle: float = 0
 
 
-func _integrate_forces(state):
+func _integrate_forces(_state):
 	if to_angle != 0 and linear_velocity.y < 0:
 		# preventing horizontal movement of the ball
 		if to_angle > MIN_ANGLE:

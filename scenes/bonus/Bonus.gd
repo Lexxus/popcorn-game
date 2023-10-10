@@ -68,5 +68,5 @@ func _process(delta):
 		scale_speed = -scale_speed
 
 
-func _on_body_entered(body):
+func _on_body_entered(_body):
 	catch.emit(self)

@@ -82,24 +82,28 @@ visible = false
 
 [node name="GateLeft1" parent="Gates" instance=ExtResource("11_ixyyn")]
 position = Vector2(14, 138)
-
-[node name="GateLeft2" parent="Gates" instance=ExtResource("11_ixyyn")]
-position = Vector2(14, 311)
-
-[node name="GateLeft3" parent="Gates" instance=ExtResource("11_ixyyn")]
-position = Vector2(14, 499)
-
-[node name="GateLeft4" parent="Gates" instance=ExtResource("11_ixyyn")]
-position = Vector2(14, 675)
+direction = 1
 
 [node name="GateRight1" parent="Gates" instance=ExtResource("11_ixyyn")]
 position = Vector2(734, 138)
 
+[node name="GateLeft2" parent="Gates" instance=ExtResource("11_ixyyn")]
+position = Vector2(14, 311)
+direction = 1
+
 [node name="GateRight2" parent="Gates" instance=ExtResource("11_ixyyn")]
 position = Vector2(734, 311)
 
+[node name="GateLeft3" parent="Gates" instance=ExtResource("11_ixyyn")]
+position = Vector2(14, 499)
+direction = 1
+
 [node name="GateRight3" parent="Gates" instance=ExtResource("11_ixyyn")]
 position = Vector2(734, 499)
+
+[node name="GateLeft4" parent="Gates" instance=ExtResource("11_ixyyn")]
+position = Vector2(14, 675)
+direction = 1
 
 [node name="GateRight4" parent="Gates" instance=ExtResource("11_ixyyn")]
 position = Vector2(734, 675)
@@ -111,7 +115,7 @@ visible = false
 position = Vector2(374, 675)
 
 [node name="Timer" type="Timer" parent="."]
-one_shot = true
+wait_time = 3.0
 
 [connection signal="wall_ready" from="Wall" to="." method="_on_wall_ready"]
 [connection signal="bottom" from="Piston" to="." method="_on_piston_bottom"]
