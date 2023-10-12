@@ -6,7 +6,7 @@ const MAX_ANGLE = deg_to_rad(-160)
 # the koefficient of ball deviation on reflection
 const BALL_DEVIATION = 80
 
-@export var speed: int = 400
+@export var speed: int = NORMAL_SPEED
 
 var is_speed_correction := false
 var to_angle: float = 0
@@ -27,7 +27,6 @@ func _integrate_forces(_state):
 
 
 func start(angle: float, pos: Vector2 = Vector2.ZERO):
-#	process_mode = Node.PROCESS_MODE_INHERIT
 	set_deferred("freeze", false)
 	set_physics_process(true)
 	var new_angle = angle if pos == Vector2.ZERO else angle + ((position.x - pos.x) / BALL_DEVIATION)
@@ -36,7 +35,6 @@ func start(angle: float, pos: Vector2 = Vector2.ZERO):
 
 func stop():
 	linear_velocity = Vector2.ZERO
-#	process_mode = Node.PROCESS_MODE_DISABLED
 	set_physics_process(false)
 	set_deferred("freeze", true)
 

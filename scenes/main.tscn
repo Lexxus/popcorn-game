@@ -57,9 +57,9 @@ texture = ExtResource("3_tm6bs")
 
 [node name="ScoreLabel" type="Label" parent="Board"]
 offset_left = 197.5
-offset_top = 94.0
+offset_top = 92.0
 offset_right = 371.5
-offset_bottom = 166.0
+offset_bottom = 164.0
 text = "000000"
 label_settings = SubResource("LabelSettings_5iyr2")
 
@@ -77,8 +77,23 @@ offset_bottom = 310.0
 auto_translate = false
 localize_numeral_system = false
 theme_override_styles/fill = SubResource("StyleBoxFlat_7f3l2")
-max_value = 10.0
-value = 10.0
+max_value = 15.0
+value = 15.0
+fill_mode = 3
+show_percentage = false
+
+[node name="MProgressBar" type="ProgressBar" parent="Board"]
+visible = false
+custom_minimum_size = Vector2(30, 91)
+offset_left = 331.0
+offset_top = 219.0
+offset_right = 361.0
+offset_bottom = 310.0
+auto_translate = false
+localize_numeral_system = false
+theme_override_styles/fill = SubResource("StyleBoxFlat_7f3l2")
+max_value = 30.0
+value = 30.0
 fill_mode = 3
 show_percentage = false
 
@@ -100,5 +115,6 @@ script = ExtResource("7_7175p")
 [connection signal="level_up" from="Level" to="." method="_on_level_up"]
 [connection signal="live_add" from="Level" to="." method="_on_live_add"]
 [connection signal="live_remove" from="Level" to="." method="_on_live_remove"]
+[connection signal="m_start" from="Level" to="." method="_on_level_m_start"]
 [connection signal="round_fail" from="Level" to="." method="_on_level_round_fail"]
 [connection signal="score" from="Level" to="." method="_on_level_score"]

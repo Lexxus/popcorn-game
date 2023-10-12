@@ -11,8 +11,10 @@ var board_y: float = 0
 var bg_x: float = 0
 
 var f_progress: float = 0
+var m_progress: float = 0
 
 @onready var f_progress_bar = $Board/FProgressBar
+@onready var m_progress_bar = $Board/MProgressBar
 @onready var board = $Board
 @onready var board_lives = $Board/Lives
 @onready var logo = $Logo
@@ -55,11 +57,22 @@ func _process(delta):
 			f_progress_stop()
 		else:
 			f_progress_bar.value = f_progress
+	if m_progress > 0:
+		m_progress -= delta
+		if m_progress <= 0:
+			m_progress_stop()
+		else:
+			m_progress_bar.value = m_progress
 
 
 func f_progress_stop():
 	f_progress = 0
 	f_progress_bar.hide()
+
+
+func m_progress_stop():
+	m_progress = 0
+	m_progress_bar.hide()
 
 
 func _on_level_score(value: int):
@@ -76,12 +89,23 @@ func _on_level_f_start(value):
 		f_progress = value
 
 
+func _on_level_m_start(value: int):
+	if value > 0:
+		m_progress_bar.max_value = value
+		m_progress_bar.value = value
+		m_progress_bar.show()
+		m_progress = value
+
+
 func _on_level_up():
 	f_progress_stop()
+	m_progress_stop()
 	board_lives.add_live()
 
 
 func _on_level_round_fail():
+	f_progress_stop()
+	m_progress_stop()
 	if board_lives.lives == 0:
 		$GameOver.start()
 	else:

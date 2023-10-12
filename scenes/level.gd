@@ -2,12 +2,15 @@ extends Node2D
 
 signal score(value: int)
 signal f_start(value: int)
+signal m_start(value: int)
 signal level_up()
 signal round_fail()
 signal live_add()
 signal live_remove()
 
 const BALL_SLOW_SPEED = 300
+const ENEMY_SCORE = 37
+const ENEMY_FREEZ_TIME = 30
 
 var brick_scene = preload("res://scenes/brick/brick.tscn")
 var brick_crash_scene = preload("res://scenes/brick/brick_crash.tscn")
@@ -18,6 +21,7 @@ var level: int = 1
 var balls: int = 1
 var is_ready_to_start := false
 var is_game_active := false
+var freeze_timer: SceneTreeTimer
 
 @export var max_enemies: int = 4
 
@@ -90,7 +94,7 @@ func apply_bonus(bonus: Lib.Bonus):
 				ball.reset_speed()
 		Lib.Bonus.FIRE:
 			player.set_fire_mode()
-		Lib.Bonus.STICK:
+		Lib.Bonus.GLUE:
 			player.set_stick_mode()
 		Lib.Bonus.WALL:
 			$Wall.toggle_bottom_wall(true)
@@ -101,6 +105,8 @@ func apply_bonus(bonus: Lib.Bonus):
 			for ball in balls_node.get_children():
 				ball.reset_speed(BALL_SLOW_SPEED)
 		Lib.Bonus.SPLIT:
+			if player.is_ball_glued:
+				player.release_ball()
 			var ball := balls_node.get_child(0) as RigidBody2D
 			var b1 := ball.duplicate() as RigidBody2D
 			var b2 := ball.duplicate() as RigidBody2D
@@ -111,6 +117,23 @@ func apply_bonus(bonus: Lib.Bonus):
 			b2.linear_velocity = ball.linear_velocity.rotated(-PI / 4)
 			balls_node.call_deferred("add_child", b1)
 			balls_node.call_deferred("add_child", b2)
+		Lib.Bonus.FREEZE:
+			freeze_enemies(true)
+			m_start.emit(ENEMY_FREEZ_TIME)
+			freeze_timer = get_tree().create_timer(ENEMY_FREEZ_TIME)
+			freeze_timer.connect("timeout", freeze_enemies)
+
+
+func clear_freeze_timer():
+	if freeze_timer:
+		freeze_timer.disconnect("timeout", freeze_enemies)
+		freeze_timer = null
+
+
+func freeze_enemies(value := false):
+	for gate in $Gates.get_children():
+		gate.freeze_enemy(value)
+	clear_freeze_timer()
 
 
 func remove_brick(body):
@@ -222,6 +245,8 @@ func _on_out_of_field_body_entered(body):
 	if body.is_class("RigidBody2D"):
 		if balls_node.get_child_count() == 1:
 			if not is_game_active: return
+			is_game_active = false
+			clear_freeze_timer()
 			$OutOfField/AudioOut.play()
 			$Player.fall()
 		else:
@@ -252,3 +277,7 @@ func _on_brick_crash_timeout(body):
 func _on_player_falled():
 	stop()
 	round_fail.emit()
+
+
+func _on_enemy_die(_type):
+	score.emit(ENEMY_SCORE)

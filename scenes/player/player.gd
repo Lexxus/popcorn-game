@@ -4,7 +4,7 @@ signal active
 signal fire(body)
 signal falled
 
-enum Mode {NORMAL, INPROGRESS, EXTENDED, FIRE, STICK}
+enum Mode {NORMAL, INPROGRESS, EXTENDED, FIRE, GLUE}
 
 const ROLLING_SPEED = 150.0
 const SPEED = 500.0
@@ -20,8 +20,8 @@ var mode := Mode.NORMAL
 var deffered_set_mode := ""
 
 var y: float
-var is_ball_stick := false
-var sticked_balls: Array[RigidBody2D] = []
+var is_ball_glued := false
+var glued_balls: Array[RigidBody2D] = []
 var is_fire_allow := true
 
 
@@ -90,15 +90,15 @@ func _process(delta):
 			is_fire_allow = false
 			$Timer.start()
 			fire.emit(self)
-		if mode == Mode.STICK and is_ball_stick:
+		if mode == Mode.GLUE and is_ball_glued:
 			release_ball()
 	
 	if direction:
 		velocity.x = direction * SPEED
 		velocity.y = 0
 		move_and_slide()
-		if is_ball_stick:
-			for b in sticked_balls:
+		if is_ball_glued:
+			for b in glued_balls:
 				b.move_and_collide(Vector2(direction * SPEED * delta, 0))
 
 
@@ -107,10 +107,10 @@ func _physics_process(_delta):
 
 
 func release_ball():
-	is_ball_stick = false
-	for b in sticked_balls:
+	is_ball_glued = false
+	for b in glued_balls:
 		b.start(-PI / 2, position)
-	sticked_balls.clear()
+	glued_balls.clear()
 
 
 func set_normal_mode(skip_texture = false, skip_animation = false):
@@ -129,7 +129,7 @@ func set_normal_mode(skip_texture = false, skip_animation = false):
 		$CollisionWide.set_deferred("disabled", true)
 		$Area2D/CollisionNormal.set_deferred("disabled", false)
 		$Area2D/CollisionWide.set_deferred("disabled", true)
-	if mode == Mode.STICK and is_ball_stick:
+	if mode == Mode.GLUE and is_ball_glued:
 		release_ball()
 	mode = Mode.NORMAL
 	return true
@@ -160,21 +160,21 @@ func set_fire_mode():
 
 
 func set_stick_mode():
-	if mode == Mode.STICK: return
+	if mode == Mode.GLUE: return
 	if not set_normal_mode(true):
 		deffered_set_mode = "set_stick_mode"
 		return
 	$Roket.texture = stick_texture
-	mode = Mode.STICK
+	mode = Mode.GLUE
 
 
 func _on_area_2d_body_shape_entered(_body_rid, body, _body_shape_index, _local_shape_index):
 	position.y = y
 	if body.is_class("RigidBody2D"):
 		$AudioBall.play()
-		if mode == Mode.STICK:
-			is_ball_stick = true
-			sticked_balls.push_back(body)
+		if mode == Mode.GLUE:
+			is_ball_glued = true
+			glued_balls.push_back(body)
 			body.stop()
 		else:
 			body.correct_angle(position)

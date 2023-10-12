@@ -12,17 +12,17 @@
 [ext_resource type="Texture2D" uid="uid://v06hcijkmxsx" path="res://sprites/enemies/round.png" id="7_s0cri"]
 [ext_resource type="AudioStream" uid="uid://jq4u0vmsn1m8" path="res://audio/select_002.wav" id="11_pq1tq"]
 
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_d5m8k"]
-bounce = 1.0
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_pubf6"]
 radius = 30.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_huvj2"]
 size = Vector2(44, 57)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_dbhkp"]
-size = Vector2(57, 57)
+[sub_resource type="CircleShape2D" id="CircleShape2D_5sywd"]
+radius = 31.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_waygi"]
+size = Vector2(46, 59)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5jgkk"]
 atlas = ExtResource("1_j3tsg")
@@ -605,10 +605,10 @@ animations = [{
 "speed": 20.0
 }]
 
-[node name="Enemy" type="StaticBody2D"]
+[node name="Enemy" type="CharacterBody2D"]
 collision_layer = 8
 collision_mask = 4
-physics_material_override = SubResource("PhysicsMaterial_d5m8k")
+motion_mode = 1
 script = ExtResource("1_qunuy")
 
 [node name="CollisionShape" type="CollisionShape2D" parent="."]
@@ -623,10 +623,10 @@ collision_layer = 8
 collision_mask = 7
 
 [node name="CollisionShape" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource("RectangleShape2D_dbhkp")
+shape = SubResource("CircleShape2D_5sywd")
 
 [node name="CollisionShapeSmall" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource("RectangleShape2D_huvj2")
+shape = SubResource("RectangleShape2D_waygi")
 disabled = true
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
@@ -641,4 +641,5 @@ visible = false
 sprite_frames = SubResource("SpriteFrames_i8rew")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_body_entered"]
+[connection signal="body_shape_entered" from="Area2D" to="." method="_on_body_shape_entered"]
 [connection signal="animation_finished" from="Explosion" to="." method="_on_explosion_finished"]

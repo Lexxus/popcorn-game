@@ -2,7 +2,8 @@ extends AnimatedSprite2D
 
 enum DirectionEnum { Left, Right }
 
-signal finish(body)
+signal finish(body: AnimatedSprite2D)
+signal enemy_die(enemy_type: StringName)
 
 var enemy_scene := preload("res://scenes/enemy/enemy.tscn")
 
@@ -13,6 +14,7 @@ var dir_vector: Vector2
 var ray_distance: float = 57 + 15
 var handle_animation_finished = &""
 var has_enemy := false
+var is_enemy_freezed := false
 
 
 func _ready():
@@ -39,6 +41,12 @@ func close_enemy():
 	play_backwards("open_enemy")
 
 
+func freeze_enemy(value: bool):
+	is_enemy_freezed = value
+	if has_enemy:
+		get_child(0).freeze(value)
+
+
 func is_exit_blocked(source_shift: Vector2, ray: Vector2):
 	var space_state := get_world_2d().direct_space_state
 	var source: Vector2 = global_position + source_shift
@@ -48,7 +56,7 @@ func is_exit_blocked(source_shift: Vector2, ray: Vector2):
 
 
 func create_enemy():
-	if has_enemy: return
+	if has_enemy or is_enemy_freezed: return
 	var ray: Vector2 = dir_vector * ray_distance
 
 	# check 3 parallel directions from the gate to cover all gate's height
@@ -59,16 +67,13 @@ func create_enemy():
 	if is_exit_blocked(Vector2.DOWN * 24, ray):
 		return
 	handle_animation_finished = &"_create_enemy"
-	prints(name, "opening gate")
 	play(&"open_enemy")
 
 
 func _create_enemy():
-	var enemy := enemy_scene.instantiate() as StaticBody2D
-	enemy.name = name + "enemy"
+	var enemy := enemy_scene.instantiate() as CharacterBody2D
 	add_child(enemy)
-	enemy.position = dir_vector * 40
-	prints(enemy.name, dir_vector, "creating enemy at", enemy.position)
+	enemy.position = dir_vector * 30
 	has_enemy = true
 	enemy.connect("die", _on_enemy_die)
 	enemy.start(dir_vector)
@@ -77,16 +82,19 @@ func _create_enemy():
 
 
 func kill_enemy():
+	stop()
 	if has_enemy:
 		get_child(0).queue_free()
 		has_enemy = false
+		is_enemy_freezed = false
 
 
-func _on_enemy_die(body):
-	print("xxx Enemy die")
+func _on_enemy_die(body: CharacterBody2D):
+	prints("Enemy dead:", body.enemy_type)
 	has_enemy = false
 	remove_child(body)
 	body.queue_free()
+	enemy_die.emit(body.enemy_type)
 
 
 func _on_animation_finished():

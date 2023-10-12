@@ -20,7 +20,7 @@ func init(bonus_type: Lib.Bonus, pos: Vector2):
 		Lib.Bonus.INIT:
 			label.text = 'I'
 			$Sprite2D.self_modulate = Color(1, 1, 0, 1)
-		Lib.Bonus.STICK:
+		Lib.Bonus.GLUE:
 			label.text = 'C'
 		Lib.Bonus.SLOW:
 			label.text = 'S'
@@ -32,21 +32,12 @@ func init(bonus_type: Lib.Bonus, pos: Vector2):
 		Lib.Bonus.SPLIT:
 			label.text = 'T'
 			$Sprite2D.self_modulate = Color(0, 0.5, 1, 1)
-		Lib.Bonus.NARROW:
-			label.text = 'N'
-			$Sprite2D.self_modulate = Color(0.8, 0.5, 0, 1)
-		Lib.Bonus.FAST:
-			label.text = 'A'
-			$Sprite2D.self_modulate = Color(1, 1, 0, 1)
 		Lib.Bonus.WALL:
 			label.text = 'F'
 			$Sprite2D.self_modulate = Color(0, 0.8, 1, 1)
 		Lib.Bonus.LIFE:
 			label.text = 'V'
 			$Sprite2D.self_modulate = Color(0, 1, 0.4, 1)
-		Lib.Bonus.POWER:
-			label.text = 'P'
-			$Sprite2D.self_modulate = Color(0.5, 0, 0.5, 1)
 	position = pos
 	name = "Bonus" + String.num(type)
 

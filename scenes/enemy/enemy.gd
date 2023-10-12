@@ -1,6 +1,6 @@
-extends StaticBody2D
+extends CharacterBody2D
 
-signal die(body)
+signal die(body: CharacterBody2D)
 
 const SPEED = 40
 const SPRITE_SIZE2 = 29
@@ -12,31 +12,32 @@ var MAX_Y = Lib.PLAY_WIDTH_HEIGHT
 @onready var sprite: AnimatedSprite2D = $Sprite
 
 var is_active := false
-# position where to move
-var target_pos := Vector2.ZERO
+var is_freezed := false
+var direction := Vector2.ZERO
+var enemy_type: StringName
 
 func start(start_direction: Vector2):
 	var list := sprite.sprite_frames.get_animation_names()
 	var i := randi_range(0, list.size() - 1)
-	var animation := list[i]
+	enemy_type = list[i]
 
-	prints(name, "Enemy randi:", i, animation)
-
-	if animation == &"fire":
+	if enemy_type == &"fire":
 		$CollisionShape.disabled = true
 		$CollisionShapeSmall.disabled = false
 		$Area2D/CollisionShape.disabled = true
 		$Area2D/CollisionShapeSmall.disabled = false
-	target_pos = start_direction * 60
-	sprite.play(animation)
+	direction = start_direction
+	sprite.play(enemy_type)
 	is_active = true
+	var timer := get_tree().create_timer(randf_range(2, 10))
+	timer.connect("timeout", update_direction)
 
 
-func set_target(dir: Vector2):
-	target_pos = position + (dir * randf_range(SPRITE_SIZE2 * 2, MAX_X / 2))
+func freeze(value: bool):
+	is_freezed = value
 
 
-func update_target():
+func update_direction():
 	var list := [Vector2.UP, Vector2.LEFT, Vector2.DOWN, Vector2.RIGHT] as Array[Vector2]
 	var is_dir_found := false
 
@@ -45,14 +46,19 @@ func update_target():
 		var dir = list[i]
 		list.remove_at(i)
 		if is_direction_free(dir):
-			set_target(dir)
+			prints(enemy_type, "direction", dir, "is free")
+			direction = dir
 			is_dir_found = true
 	if not is_dir_found:
-		target_pos = position
+		direction = Vector2.ZERO
+		print("!!!Enemy direction is not found")
 
 
 func punch(silent := false):
+	if not is_active: return
 	is_active = false
+	$CollisionShape.disabled = true
+	$CollisionShapeSmall.disabled = true
 	sprite.hide()
 	$Explosion.show()
 	$Explosion.play(&"default")
@@ -60,25 +66,24 @@ func punch(silent := false):
 		$AudioExplosion.play()
 
 
-func _process(delta):
-	if is_active:
-		if position.distance_to(target_pos) <= 10.0:
-			update_target()
-		position += (target_pos - position).normalized() * SPEED * delta
+func _process(_delta):
+	if is_active and not is_freezed:
+		velocity = direction * SPEED
+		move_and_slide()
 
 
 func _on_body_entered(body):
 	if not is_active: return
-	prints(name, "collision:", body.name, position)
+	prints(enemy_type, "collision:", body.name, position)
 	if body.is_in_group(&"destructor"):
-		punch()
+		call_deferred("punch")
 	else:
-		update_target()
+		update_direction()
 
 
 func is_direction_free(dir: Vector2):
 	var space_state := get_world_2d().direct_space_state
-	var aim: Vector2 = global_position + (dir * 30)
+	var aim: Vector2 = global_position + (dir * 40)
 	var query := PhysicsRayQueryParameters2D.create(global_position, aim, 0b100)
 
 	return space_state.intersect_ray(query).is_empty()
