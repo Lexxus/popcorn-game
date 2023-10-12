@@ -641,5 +641,4 @@ visible = false
 sprite_frames = SubResource("SpriteFrames_i8rew")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_body_entered"]
-[connection signal="body_shape_entered" from="Area2D" to="." method="_on_body_shape_entered"]
 [connection signal="animation_finished" from="Explosion" to="." method="_on_explosion_finished"]

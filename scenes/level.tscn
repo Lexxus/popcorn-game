@@ -28,6 +28,7 @@ texture_filter = 1
 script = ExtResource("1_8v4wn")
 
 [node name="Bricks" type="Node2D" parent="."]
+unique_name_in_owner = true
 
 [node name="Bonuses" type="Node2D" parent="."]
 
