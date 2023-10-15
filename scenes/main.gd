@@ -88,7 +88,7 @@ func m_progress_stop():
 func _on_level_score(value: int):
 	score += value
 	var score_str: String = String.num(score)
-	$Board/ScoreLabel.text = score_str.lpad(6, '0')
+	$Board/ScoreLabel.text = score_str.pad_zeros(6)
 
 
 func _on_level_f_start(value):

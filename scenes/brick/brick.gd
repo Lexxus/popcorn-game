@@ -1,6 +1,6 @@
 extends StaticBody2D
 
-enum BrickType {GEN1, GEN2, EXTRA1, EXTRA2, EXTRA3, EXTRA4, STATIC}
+enum BrickType {NONE, GEN1, GEN2, EXTRA1, EXTRA2, EXTRA3, EXTRA4, STATIC, ESCAPE}
 
 signal hit(body)
 signal crashed(body)
@@ -9,6 +9,7 @@ var extra1_texture: Texture2D = preload("res://sprites/bricks/brick-1.png")
 var extra2_texture: Texture2D = preload("res://sprites/bricks/brick-2.png")
 var extra3_texture: Texture2D = preload("res://sprites/bricks/brick-3.png")
 var extra4_texture: Texture2D = preload("res://sprites/bricks/brick-4.png")
+var escape_texture: Texture2D = preload("res://sprites/bricks/brick-escape.png")
 var gen_texture: Texture2D
 
 var color: Color
@@ -52,6 +53,8 @@ func init(brick_type: BrickType):
 			$Animations.show()
 			hits = 0
 			score = 0
+		BrickType.ESCAPE:
+			sprite.texture = escape_texture
 
 
 func punch(instant: bool = false):
