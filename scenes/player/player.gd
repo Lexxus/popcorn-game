@@ -124,7 +124,7 @@ func set_normal_mode(skip_texture = false, skip_animation = false):
 	$Animations.hide()
 	if !skip_texture:
 		$Roket.texture = init_texture
-	if mode == Mode.EXTENDED:
+	if mode == Mode.EXTENDED or mode == Mode.INPROGRESS:
 		$CollisionNormal.set_deferred("disabled", false)
 		$CollisionWide.set_deferred("disabled", true)
 		$Area2D/CollisionNormal.set_deferred("disabled", false)
@@ -170,11 +170,11 @@ func set_stick_mode():
 
 func _on_area_2d_body_shape_entered(_body_rid, body, _body_shape_index, _local_shape_index):
 	position.y = y
-	if body.is_class("RigidBody2D"):
+	if body.is_in_group("destructor"):
 		$AudioBall.play()
 		if mode == Mode.GLUE:
 			is_ball_glued = true
-			glued_balls.push_back(body)
+			glued_balls.append(body)
 			body.stop()
 		else:
 			body.correct_angle(position)

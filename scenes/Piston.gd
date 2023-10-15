@@ -41,7 +41,7 @@ func _process(delta):
 	if top_y <= MIN_Y:
 		direction = -direction
 		top.emit()
-	if top_y >= 0:
+	if top_y >= 0 and direction > 0:
 		direction = -direction
 		is_active = false
 		for node in piston_head.get_children():

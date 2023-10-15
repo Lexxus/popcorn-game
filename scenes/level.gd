@@ -79,6 +79,7 @@ func stop():
 
 func next_level():
 	level += 1
+	prints("Next level:", level)
 	level_up.emit()
 	$Piston.start()
 
@@ -137,9 +138,10 @@ func freeze_enemies(value := false):
 
 
 func remove_brick(body):
-	$Bricks.remove_child(body)
+	%Bricks.remove_child(body)
 	body.queue_free()
-	if $Bricks.get_child_count() == 0:
+	prints("Remove brick, left:", %Bricks.get_child_count())
+	if %Bricks.get_child_count() == 0:
 		stop()
 		$AudioSuccess.play()
 
@@ -165,6 +167,7 @@ func player_roll_in(_body):
 
 
 func _on_piston_top():
+	prints("_onPistonTop")
 	balls_node.hide()
 	$Levels.setup_bricks(level)
 	$LevelPanel.show()
@@ -172,6 +175,7 @@ func _on_piston_top():
 
 
 func _on_piston_bottom():
+	prints("_onPistonBottom")
 	round_init()
 
 

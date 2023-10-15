@@ -22,23 +22,23 @@ func _ready():
 
 
 func open():
-	play_backwards("open")
+	play_backwards(&"open")
 
 
 func close():
-	play("open")
+	play(&"open")
 
 
 func grow():
-	play("grow")
+	play(&"grow")
 
 
 func open_enemy():
-	play("open_enemy")
+	play(&"open_enemy")
 
 
 func close_enemy():
-	play_backwards("open_enemy")
+	play_backwards(&"open_enemy")
 
 
 func freeze_enemy(value: bool):
@@ -73,9 +73,9 @@ func create_enemy():
 func _create_enemy():
 	var enemy := enemy_scene.instantiate() as CharacterBody2D
 	add_child(enemy)
-	enemy.position = dir_vector * 30
+	enemy.position = dir_vector * 38
 	has_enemy = true
-	enemy.connect("die", _on_enemy_die)
+	enemy.connect(&"die", _on_enemy_die)
 	enemy.start(dir_vector)
 	await get_tree().create_timer(1.0).timeout
 	play_backwards(&"open_enemy")
@@ -98,6 +98,9 @@ func _on_enemy_die(body: CharacterBody2D):
 
 
 func _on_animation_finished():
+	if animation == &"grow":
+		set_animation(&"open_enemy")
+		set_frame(0)
 	if handle_animation_finished != "":
 		callv(handle_animation_finished, [])
 		handle_animation_finished = &""

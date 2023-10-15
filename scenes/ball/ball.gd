@@ -9,18 +9,20 @@ const BALL_DEVIATION = 80
 @export var speed: int = NORMAL_SPEED
 
 var is_speed_correction := false
-var to_angle: float = 0
+var angle_delta: float = 0
 
 
 func _integrate_forces(_state):
-	if to_angle != 0 and linear_velocity.y < 0:
+	if angle_delta != 0 and linear_velocity.angle() < 0:
+		var new_angle := linear_velocity.angle() + angle_delta
 		# preventing horizontal movement of the ball
-		if to_angle > MIN_ANGLE:
-			to_angle = MIN_ANGLE
-		elif to_angle < MAX_ANGLE:
-			to_angle = MAX_ANGLE
-		linear_velocity = Vector2(cos(to_angle) * speed, sin(to_angle) * speed)
-		to_angle = 0
+		if new_angle > MIN_ANGLE:
+			new_angle = MIN_ANGLE
+		elif new_angle < MAX_ANGLE:
+			new_angle = MAX_ANGLE
+		# linear_velocity = Vector2(cos(angle_delta) * speed, sin(angle_delta) * speed)
+		linear_velocity = Vector2.from_angle(new_angle) * speed
+		angle_delta = 0
 	elif is_speed_correction:
 		is_speed_correction = false
 		linear_velocity = linear_velocity.normalized() * speed
@@ -30,7 +32,7 @@ func start(angle: float, pos: Vector2 = Vector2.ZERO):
 	set_deferred("freeze", false)
 	set_physics_process(true)
 	var new_angle = angle if pos == Vector2.ZERO else angle + ((position.x - pos.x) / BALL_DEVIATION)
-	linear_velocity = Vector2(speed * cos(new_angle), speed * sin(new_angle))
+	linear_velocity = Vector2.from_angle(new_angle) * speed
 
 
 func stop():
@@ -56,4 +58,4 @@ func correct_speed():
 
 
 func correct_angle(pos: Vector2):
-	to_angle = linear_velocity.angle() + ((position.x - pos.x) / BALL_DEVIATION)
+	angle_delta = (position.x - pos.x) / BALL_DEVIATION

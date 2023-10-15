@@ -270,7 +270,7 @@ animations = [{
 [node name="Player" type="CharacterBody2D" groups=["destructor"]]
 texture_filter = 1
 disable_mode = 1
-collision_mask = 14
+collision_mask = 6
 motion_mode = 1
 floor_stop_on_slope = false
 platform_on_leave = 2
@@ -284,7 +284,7 @@ polygon = PackedVector2Array(-64, -12, 64, -12, 72, -5, 72, 5, 64, 13, -64, 13, 
 disabled = true
 
 [node name="Area2D" type="Area2D" parent="."]
-collision_mask = 26
+collision_mask = 2
 
 [node name="CollisionNormal" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_byh7p")

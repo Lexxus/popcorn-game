@@ -609,6 +609,7 @@ animations = [{
 collision_layer = 8
 collision_mask = 4
 motion_mode = 1
+safe_margin = 0.12
 script = ExtResource("1_qunuy")
 
 [node name="CollisionShape" type="CollisionShape2D" parent="."]
@@ -640,5 +641,9 @@ stream = ExtResource("11_pq1tq")
 visible = false
 sprite_frames = SubResource("SpriteFrames_i8rew")
 
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="body_entered" from="Area2D" to="." method="_on_body_entered"]
 [connection signal="animation_finished" from="Explosion" to="." method="_on_explosion_finished"]
+[connection signal="timeout" from="Timer" to="." method="update_direction"]

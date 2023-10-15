@@ -76,7 +76,7 @@ animations = [{
 [node name="Ball" type="RigidBody2D" groups=["destructor"]]
 texture_filter = 1
 collision_layer = 2
-collision_mask = 13
+collision_mask = 15
 mass = 0.08
 physics_material_override = SubResource("PhysicsMaterial_couyr")
 gravity_scale = 0.0
