@@ -136,6 +136,7 @@ ignore_texture_size = true
 [connection signal="live_add" from="Level" to="." method="_on_live_add"]
 [connection signal="live_remove" from="Level" to="." method="_on_live_remove"]
 [connection signal="m_start" from="Level" to="." method="_on_level_m_start"]
+[connection signal="reset" from="Level" to="." method="_on_level_reset"]
 [connection signal="round_fail" from="Level" to="." method="_on_level_round_fail"]
 [connection signal="score" from="Level" to="." method="_on_level_score"]
 [connection signal="pressed" from="Pause/PlayButton" to="." method="_on_play_button_pressed"]

@@ -7,6 +7,7 @@ signal level_up()
 signal round_fail()
 signal live_add()
 signal live_remove()
+signal reset()
 
 const BALL_SLOW_SPEED = 300
 const ENEMY_SCORE = 37
@@ -115,10 +116,12 @@ func apply_bonus(bonus: Lib.Bonus):
 	match bonus:
 		Lib.Bonus.EXTEND:
 			player.set_extend_mode()
-		Lib.Bonus.INIT:
+		Lib.Bonus.RESET:
 			player.set_normal_mode()
 			for ball in balls_node.get_children():
 				ball.reset_speed()
+			$Wall.toggle_bottom_wall(false)
+			freeze_enemies(false)
 		Lib.Bonus.FIRE:
 			player.set_fire_mode()
 		Lib.Bonus.GLUE:
@@ -143,6 +146,10 @@ func apply_bonus(bonus: Lib.Bonus):
 			b2.linear_velocity = ball.linear_velocity.rotated(-PI / 4)
 			balls_node.call_deferred("add_child", b1)
 			balls_node.call_deferred("add_child", b2)
+		Lib.Bonus.IMPULSE:
+			player.set_normal_mode()
+			for ball in balls_node.get_children():
+				ball.invert()
 		Lib.Bonus.FREEZE:
 			freeze_enemies(true)
 			m_start.emit(ENEMY_FREEZ_TIME)

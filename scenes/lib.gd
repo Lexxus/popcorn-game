@@ -3,12 +3,13 @@ extends Node
 const PLAY_FIELD_WIDTH = 748.0
 var PLAY_WIDTH_HEIGHT: int = ProjectSettings["display/window/size/viewport_height"]
 
-enum Bonus {NONE, EXTEND, INIT, GLUE, SLOW, FIRE, FREEZE, SPLIT, WALL, LIFE}
+enum Bonus {NONE, EXTEND, IMPULSE, RESET, GLUE, SLOW, FIRE, FREEZE, SPLIT, WALL, LIFE}
 
 static var list: Dictionary = {
 	Bonus.NONE: 100,
 	Bonus.EXTEND: 2,
-	Bonus.INIT: 2,
+	Bonus.IMPULSE: 2,
+	Bonus.RESET: 2,
 	Bonus.GLUE: 2,
 	Bonus.SLOW: 2,
 	Bonus.FIRE: 1,

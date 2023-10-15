@@ -9,6 +9,7 @@ const BALL_DEVIATION = 80
 @export var speed: int = NORMAL_SPEED
 
 var is_speed_correction := false
+var is_invert := false
 var angle_delta: float = 0
 var velocity_backup: Vector2
 
@@ -27,6 +28,9 @@ func _integrate_forces(_state):
 	elif is_speed_correction:
 		is_speed_correction = false
 		linear_velocity = linear_velocity.normalized() * speed
+	elif is_invert:
+		linear_velocity = linear_velocity.rotated(PI)
+		is_invert = false
 
 
 func start(angle: float, pos: Vector2 = Vector2.ZERO):
@@ -67,3 +71,7 @@ func correct_speed():
 
 func correct_angle(pos: Vector2):
 	angle_delta = (position.x - pos.x) / BALL_DEVIATION
+
+
+func invert():
+	is_invert = true

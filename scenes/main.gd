@@ -138,3 +138,8 @@ func _on_play_button_pressed():
 
 func _on_quit_button_pressed():
 	get_tree().quit()
+
+
+func _on_level_reset():
+	f_progress_stop()
+	m_progress_stop()

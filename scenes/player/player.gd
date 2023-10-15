@@ -129,6 +129,7 @@ func release_ball():
 
 func set_normal_mode(skip_texture = false, skip_animation = false):
 	if mode == Mode.NORMAL: return true
+	release_ball()
 	if mode == Mode.EXTENDED and not skip_animation:
 		$Animations.play_backwards("expand")
 		mode = Mode.INPROGRESS
@@ -143,8 +144,6 @@ func set_normal_mode(skip_texture = false, skip_animation = false):
 		$CollisionWide.set_deferred("disabled", true)
 		$Area2D/CollisionNormal.set_deferred("disabled", false)
 		$Area2D/CollisionWide.set_deferred("disabled", true)
-	if mode == Mode.GLUE:
-		release_ball()
 	mode = Mode.NORMAL
 	return true
 

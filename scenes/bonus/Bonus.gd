@@ -19,8 +19,10 @@ func init(bonus_type: Lib.Bonus, pos: Vector2):
 	match bonus_type:
 		Lib.Bonus.EXTEND:
 			label.text = 'E'
-		Lib.Bonus.INIT:
+		Lib.Bonus.IMPULSE:
 			label.text = 'I'
+		Lib.Bonus.RESET:
+			label.text = 'R'
 			$Sprite2D.self_modulate = Color(1, 1, 0, 1)
 		Lib.Bonus.GLUE:
 			label.text = 'C'
