@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://c754lbfx0yrpu"]
+[gd_scene load_steps=15 format=3 uid="uid://c754lbfx0yrpu"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_6th85"]
 [ext_resource type="Texture2D" uid="uid://c83gdpjarkbf0" path="res://sprites/logo.png" id="2_wri5c"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://scenes/Lives.gd" id="6_n34hd"]
 [ext_resource type="Texture2D" uid="uid://blcdpdt34eqli" path="res://sprites/live.png" id="7_3iohd"]
 [ext_resource type="Script" path="res://scenes/GameOver.gd" id="7_7175p"]
+[ext_resource type="Texture2D" uid="uid://dl7fsvgtatevi" path="res://sprites/pause.png" id="10_i8ilp"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_23k7w"]
 
@@ -111,6 +112,25 @@ position = Vector2(376, -41)
 texture = ExtResource("6_epck0")
 script = ExtResource("7_7175p")
 
+[node name="Pause" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(369, 632)
+texture = ExtResource("10_i8ilp")
+
+[node name="PlayButton" type="TextureButton" parent="Pause"]
+offset_left = 45.0
+offset_top = -71.0
+offset_right = 198.0
+offset_bottom = 6.0
+ignore_texture_size = true
+
+[node name="QuitButton" type="TextureButton" parent="Pause"]
+offset_left = 45.0
+offset_top = 8.0
+offset_right = 198.0
+offset_bottom = 85.0
+ignore_texture_size = true
+
 [connection signal="f_start" from="Level" to="." method="_on_level_f_start"]
 [connection signal="level_up" from="Level" to="." method="_on_level_up"]
 [connection signal="live_add" from="Level" to="." method="_on_live_add"]
@@ -118,3 +138,5 @@ script = ExtResource("7_7175p")
 [connection signal="m_start" from="Level" to="." method="_on_level_m_start"]
 [connection signal="round_fail" from="Level" to="." method="_on_level_round_fail"]
 [connection signal="score" from="Level" to="." method="_on_level_score"]
+[connection signal="pressed" from="Pause/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="Pause/QuitButton" to="." method="_on_quit_button_pressed"]

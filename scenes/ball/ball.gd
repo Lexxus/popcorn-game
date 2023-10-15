@@ -10,6 +10,7 @@ const BALL_DEVIATION = 80
 
 var is_speed_correction := false
 var angle_delta: float = 0
+var velocity_backup: Vector2
 
 
 func _integrate_forces(_state):
@@ -36,9 +37,16 @@ func start(angle: float, pos: Vector2 = Vector2.ZERO):
 
 
 func stop():
+	velocity_backup = linear_velocity
 	linear_velocity = Vector2.ZERO
 	set_physics_process(false)
 	set_deferred("freeze", true)
+
+
+func release():
+	set_physics_process(true)
+	linear_velocity = velocity_backup
+	set_deferred("freeze", false)
 
 
 func move_to(pos: Vector2):

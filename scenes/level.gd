@@ -21,6 +21,7 @@ var level: int = 1
 var balls: int = 1
 var is_ready_to_start := false
 var is_game_active := false
+var is_game_paused := false
 var freeze_timer: SceneTreeTimer
 
 @export var max_enemies: int = 4
@@ -37,7 +38,8 @@ func _ready():
 
 
 func _process(_delta):
-	if Input.is_action_just_pressed("fire") and is_ready_to_start:
+	if Input.is_action_just_pressed("fire") and is_ready_to_start and not is_game_paused:
+		Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
 		is_ready_to_start = false
 		var ball := balls_node.get_child(0) as RigidBody2D
 		ball.reset_speed()
@@ -77,6 +79,30 @@ func stop():
 		node.queue_free()
 
 
+func pause(value: bool) -> bool:
+	if not is_game_active: return false
+	is_game_paused = value
+	for b in $Bonuses.get_children():
+		b.pause(value)
+	if value:
+		$Timer.stop()
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		for ball in balls_node.get_children():
+			ball.stop()
+		player.pause()
+		for gate in $Gates.get_children():
+			gate.pause_enemy()
+	else:
+		$Timer.start()
+		Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
+		for ball in balls_node.get_children():
+			ball.release()
+		player.release()
+		for gate in $Gates.get_children():
+			gate.unpause_enemy()
+	return true
+
+
 func next_level():
 	level += 1
 	prints("Next level:", level)
@@ -106,8 +132,7 @@ func apply_bonus(bonus: Lib.Bonus):
 			for ball in balls_node.get_children():
 				ball.reset_speed(BALL_SLOW_SPEED)
 		Lib.Bonus.SPLIT:
-			if player.is_ball_glued:
-				player.release_ball()
+			player.release_ball()
 			var ball := balls_node.get_child(0) as RigidBody2D
 			var b1 := ball.duplicate() as RigidBody2D
 			var b2 := ball.duplicate() as RigidBody2D
@@ -209,14 +234,16 @@ func _on_gate_finish(body):
 func _on_timer_timeout():
 	if not is_game_active: return
 	for i in max_enemies:
-		var gate = $Gates.get_child(i)
-		gate.create_enemy()
+		if randf() > 0.5:
+			var gate = $Gates.get_child(i)
+			gate.create_enemy()
 
 
 func _on_player_active():
 	$LevelPanel.hide()
 	move_ball_to_player()
 	balls_node.show()
+	balls_node.get_child(0).stop()
 	is_ready_to_start = true
 
 
@@ -242,6 +269,8 @@ func _on_brick_crashed(body: StaticBody2D):
 		bonus.connect("catch", _on_player_catch_bonus)
 		bonus.connect("out", _on_bonus_out)
 		$Bonuses.add_child(bonus)
+		if is_game_paused:
+			bonus.pause(true)
 	remove_brick(body)
 
 

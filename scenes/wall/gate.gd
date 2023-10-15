@@ -15,6 +15,7 @@ var ray_distance: float = 57 + 15
 var handle_animation_finished = &""
 var has_enemy := false
 var is_enemy_freezed := false
+var is_anim_paused := false
 
 
 func _ready():
@@ -79,6 +80,25 @@ func _create_enemy():
 	enemy.start(dir_vector)
 	await get_tree().create_timer(1.0).timeout
 	play_backwards(&"open_enemy")
+
+
+func pause_enemy():
+	if is_playing():
+		is_anim_paused = true
+		pause()
+	if has_enemy:
+		get_child(0).freeze(true)
+
+
+func unpause_enemy():
+	if is_anim_paused:
+		if speed_scale < 0:
+			play_backwards()
+		else:
+			play()
+		is_anim_paused = false
+	if has_enemy:
+		get_child(0).freeze(false)
 
 
 func kill_enemy():

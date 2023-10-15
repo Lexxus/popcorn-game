@@ -40,6 +40,10 @@ func start(start_direction: Vector2):
 
 func freeze(value: bool):
 	is_freezed = value
+	if value:
+		sprite.pause()
+	else:
+		sprite.play()
 
 
 func update_direction():

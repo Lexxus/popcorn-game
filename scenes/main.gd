@@ -12,6 +12,7 @@ var bg_x: float = 0
 
 var f_progress: float = 0
 var m_progress: float = 0
+var is_game_paused := false
 
 @onready var f_progress_bar = $Board/FProgressBar
 @onready var m_progress_bar = $Board/MProgressBar
@@ -35,6 +36,15 @@ func _ready():
 
 
 func _process(delta):
+	if Input.is_action_just_pressed("pause"):
+		if $Level.pause(not is_game_paused):
+			is_game_paused = not is_game_paused
+			if is_game_paused:
+				$Pause.show()
+			else:
+				$Pause.hide()
+
+	if is_game_paused: return
 	if bg_x > 0:
 		bg.position.x -= BG_SPEED * delta
 		if bg.position.x <= bg_x:
@@ -118,3 +128,13 @@ func _on_live_add():
 
 func _on_live_remove():
 	board_lives.remove_live()
+
+
+func _on_play_button_pressed():
+	if is_game_paused and $Level.pause(false):
+		$Pause.hide()
+		is_game_paused = false
+
+
+func _on_quit_button_pressed():
+	get_tree().quit()

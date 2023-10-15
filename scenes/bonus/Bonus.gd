@@ -6,9 +6,11 @@ signal out(body)
 const FALL_SPEED = 100
 
 var type := Lib.Bonus.NONE
-var scale_speed = -0.9
+var scale_speed = -1
 var is_front_side: bool = true
 var viewport_height: float
+var is_paused := false
+
 
 func init(bonus_type: Lib.Bonus, pos: Vector2):
 	viewport_height = ProjectSettings["display/window/size/viewport_height"]
@@ -41,7 +43,13 @@ func init(bonus_type: Lib.Bonus, pos: Vector2):
 	position = pos
 	name = "Bonus" + String.num(type)
 
+
+func pause(value: bool):
+	is_paused = value
+
+
 func _process(delta):
+	if is_paused: return
 	position.y += FALL_SPEED * delta
 	if position.y > viewport_height:
 		out.emit(self)

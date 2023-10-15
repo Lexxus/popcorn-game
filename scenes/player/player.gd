@@ -20,8 +20,7 @@ var mode := Mode.NORMAL
 var deffered_set_mode := ""
 
 var y: float
-var is_ball_glued := false
-var glued_balls: Array[RigidBody2D] = []
+var glued_ball: RigidBody2D = null
 var is_fire_allow := true
 
 
@@ -40,6 +39,14 @@ func start():
 func stop():
 	is_active = false
 	set_normal_mode()
+
+
+func pause():
+	is_active = false
+
+
+func release():
+	is_active = true
 
 
 func fall():
@@ -90,27 +97,34 @@ func _process(delta):
 			is_fire_allow = false
 			$Timer.start()
 			fire.emit(self)
-		if mode == Mode.GLUE and is_ball_glued:
+		if mode == Mode.GLUE:
 			release_ball()
 	
 	if direction:
 		velocity.x = direction * SPEED
 		velocity.y = 0
 		move_and_slide()
-		if is_ball_glued:
-			for b in glued_balls:
-				b.move_and_collide(Vector2(direction * SPEED * delta, 0))
+		if glued_ball:
+			glued_ball.move_and_collide(Vector2(direction * SPEED * delta, 0))
 
 
 func _physics_process(_delta):
 	position.y = y
 
 
+func _unhandled_input(event):
+	if is_active and event is InputEventMouseMotion:
+		var delta_x: float = event.relative.x
+		if delta_x != 0:
+			move_and_collide(Vector2(delta_x, 0))
+			if glued_ball:
+				glued_ball.move_and_collide(Vector2(delta_x, 0))
+
+
 func release_ball():
-	is_ball_glued = false
-	for b in glued_balls:
-		b.start(-PI / 2, position)
-	glued_balls.clear()
+	if glued_ball:
+		glued_ball.start(-PI / 2, position)
+		glued_ball = null
 
 
 func set_normal_mode(skip_texture = false, skip_animation = false):
@@ -129,7 +143,7 @@ func set_normal_mode(skip_texture = false, skip_animation = false):
 		$CollisionWide.set_deferred("disabled", true)
 		$Area2D/CollisionNormal.set_deferred("disabled", false)
 		$Area2D/CollisionWide.set_deferred("disabled", true)
-	if mode == Mode.GLUE and is_ball_glued:
+	if mode == Mode.GLUE:
 		release_ball()
 	mode = Mode.NORMAL
 	return true
@@ -173,8 +187,8 @@ func _on_area_2d_body_shape_entered(_body_rid, body, _body_shape_index, _local_s
 	if body.is_in_group("destructor"):
 		$AudioBall.play()
 		if mode == Mode.GLUE:
-			is_ball_glued = true
-			glued_balls.append(body)
+			release_ball()
+			glued_ball = body
 			body.stop()
 		else:
 			body.correct_angle(position)
