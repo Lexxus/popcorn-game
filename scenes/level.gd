@@ -23,6 +23,7 @@ var balls: int = 1
 var is_ready_to_start := false
 var is_game_active := false
 var is_game_paused := false
+var min_bricks_count: int = 0
 var freeze_timer: SceneTreeTimer
 
 @export var max_enemies: int = 4
@@ -83,6 +84,10 @@ func stop():
 func pause(value: bool) -> bool:
 	if not is_game_active: return false
 	is_game_paused = value
+	if value:
+		%AnimationCovered.stop()
+	else:
+		%AnimationCovered.play()
 	for b in $Bonuses.get_children():
 		b.pause(value)
 	if value:
@@ -105,6 +110,7 @@ func pause(value: bool) -> bool:
 
 
 func next_level():
+	%AnimationCovered.stop()
 	level += 1
 	prints("Next level:", level)
 	level_up.emit()
@@ -173,7 +179,7 @@ func remove_brick(body):
 	%Bricks.remove_child(body)
 	body.queue_free()
 	prints("Remove brick, left:", %Bricks.get_child_count())
-	if %Bricks.get_child_count() == 0:
+	if %Bricks.get_child_count() <= min_bricks_count:
 		stop()
 		$AudioSuccess.play()
 
@@ -200,8 +206,12 @@ func player_roll_in(_body):
 
 func _on_piston_top():
 	prints("_onPistonTop")
+	%CoveredBody.hide()
+	for brick in %Bricks.get_children():
+		brick.queue_free()
 	balls_node.hide()
 	$Levels.setup_bricks(level)
+	min_bricks_count = $Levels.static_bricks_count
 	$LevelPanel.show()
 	$LevelPanel/Label.text = "LEVEL %s" % level
 
