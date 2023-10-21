@@ -19,6 +19,7 @@ var is_freezed := false
 var direction := Vector2.ZERO
 @onready var timer: Timer = $Timer
 var enemy_type: StringName
+var proc_cycles_to_off: int = 10
 
 
 func start(start_direction: Vector2):
@@ -71,8 +72,6 @@ func punch(silent := false):
 	if not is_active: return
 	if not timer.is_stopped(): timer.stop()
 	is_active = false
-	# remove from the collision layer to not collide while explosive animation is playing
-	set_deferred("collision_layer", 0b0)
 	sprite.hide()
 	$Explosion.show()
 	$Explosion.play(&"default")
@@ -85,6 +84,11 @@ func _process(delta):
 		var collide := move_and_collide(direction * SPEED * delta)
 		if collide:
 			update_direction()
+	elif not is_active and proc_cycles_to_off > 0:
+		proc_cycles_to_off -= 1
+		if proc_cycles_to_off == 0:
+			# remove from the collision layer to not collide while explosive animation is playing
+			set_deferred("collision_layer", 0b0)
 
 
 func _on_body_entered(body):

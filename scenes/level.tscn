@@ -133,6 +133,8 @@ script = ExtResource("1_8v4wn")
 [node name="CoveredBody" type="StaticBody2D" parent="."]
 unique_name_in_owner = true
 visible = false
+collision_layer = 4
+collision_mask = 2
 
 [node name="AnimationCovered" type="AnimatedSprite2D" parent="CoveredBody"]
 unique_name_in_owner = true

@@ -1,6 +1,6 @@
 extends StaticBody2D
 
-enum BrickType {NONE, GEN1, GEN2, EXTRA1, EXTRA2, EXTRA3, EXTRA4, STATIC, ESCAPE, COVER}
+enum BrickType {NONE, GEN1, GEN2, EXTRA1, EXTRA2, EXTRA3, EXTRA4, STATIC, ESCAPE, COVER, TELEPORT}
 
 signal hit(body)
 signal crashed(body)
@@ -52,6 +52,7 @@ func init(brick_type: BrickType):
 		BrickType.STATIC:
 			sprite.hide()
 			$Animations.show()
+			$Animations.set_animation("ice")
 			hits = 0
 			score = 0
 		BrickType.ESCAPE:
@@ -91,6 +92,10 @@ func _on_area_2d_body_shape_entered(_body_rid, body, _body_shape_index, _local_s
 		else:
 			$AudioCrash.play()
 		punch()
+		if type == BrickType.ESCAPE:
+			body.fall_down()
+		else:
+			body.correct_speed()
 
 
 func _on_audio_crash_finished():

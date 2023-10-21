@@ -184,12 +184,14 @@ func set_stick_mode():
 func _on_area_2d_body_shape_entered(_body_rid, body, _body_shape_index, _local_shape_index):
 	position.y = y
 	if body.is_in_group("destructor"):
-		$AudioBall.play()
+		body.catch()
 		if mode == Mode.GLUE:
+			$AudioGlue.play()
 			release_ball()
 			glued_ball = body
 			body.stop()
 		else:
+			$AudioBall.play()
 			body.correct_angle(position)
 
 

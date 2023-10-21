@@ -74,11 +74,11 @@ region_enabled = true
 region_rect = Rect2(0, 0, 704, 16)
 
 [node name="LeftCorner" type="Sprite2D" parent="WallObject/TopGroup"]
-position = Vector2(15, 9)
+position = Vector2(14.5, 8.5)
 texture = ExtResource("4_w7pjq")
 
 [node name="RightCorner" type="Sprite2D" parent="WallObject/TopGroup"]
-position = Vector2(733, 8)
+position = Vector2(733.5, 8.5)
 texture = ExtResource("5_vmovo")
 
 [node name="WallArea2D" type="Area2D" parent="WallObject"]

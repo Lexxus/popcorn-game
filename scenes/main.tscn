@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c754lbfx0yrpu"]
+[gd_scene load_steps=16 format=3 uid="uid://c754lbfx0yrpu"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_6th85"]
 [ext_resource type="Texture2D" uid="uid://c83gdpjarkbf0" path="res://sprites/logo.png" id="2_wri5c"]
@@ -12,6 +12,10 @@
 [ext_resource type="Texture2D" uid="uid://dl7fsvgtatevi" path="res://sprites/pause.png" id="10_i8ilp"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_23k7w"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_huecg"]
+font_size = 12
+font_color = Color(0, 1, 1, 0.513726)
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_t7s4a"]
 
@@ -34,6 +38,14 @@ position = Vector2(576, 360)
 texture = SubResource("CanvasTexture_23k7w")
 region_enabled = true
 region_rect = Rect2(0, 0, 1152, 720)
+
+[node name="Version" type="Label" parent="."]
+offset_left = 1049.0
+offset_right = 1148.0
+offset_bottom = 26.0
+text = "v.0.1.0-alpha-1"
+label_settings = SubResource("LabelSettings_huecg")
+horizontal_alignment = 2
 
 [node name="Level" parent="." instance=ExtResource("3_bprjs")]
 

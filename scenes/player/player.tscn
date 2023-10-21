@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://cxldcoan216o"]
+[gd_scene load_steps=45 format=3 uid="uid://cxldcoan216o"]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_qj8r4"]
 [ext_resource type="Texture2D" uid="uid://c6bryv7krnm4p" path="res://sprites/player/roket.png" id="2_pu8dq"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dmjj83flrkshx" path="res://sprites/player/roket-opening.png" id="4_8xt5w"]
 [ext_resource type="Texture2D" uid="uid://e874wdrwbny4" path="res://sprites/player/roket-roll.png" id="4_albnd"]
 [ext_resource type="Texture2D" uid="uid://dghllbqa87pk6" path="res://sprites/player/roket-expand.png" id="4_q6o5x"]
+[ext_resource type="AudioStream" uid="uid://bg6e6fei7q27c" path="res://audio/glue.wav" id="4_thvda"]
 [ext_resource type="Texture2D" uid="uid://deyg8ljvrlc3n" path="res://sprites/player/roket-fall.png" id="7_eeotm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_byh7p"]
@@ -284,7 +285,7 @@ polygon = PackedVector2Array(-64, -12, 64, -12, 72, -5, 72, 5, 64, 13, -64, 13, 
 disabled = true
 
 [node name="Area2D" type="Area2D" parent="."]
-collision_mask = 2
+collision_mask = 18
 
 [node name="CollisionNormal" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_byh7p")
@@ -299,6 +300,11 @@ region_rect = Rect2(0, 0, 100, 20)
 
 [node name="AudioBall" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_fwvqk")
+
+[node name="AudioGlue" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(0, -1)
+stream = ExtResource("4_thvda")
+volume_db = -5.0
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.3
