@@ -1,4 +1,12 @@
-# 0.1.0-alpha-1 (2023-10-21)
+# Changelog
+
+## 0.1.0-alpha-2 (2023-10-22)
+
+- Added ball covered animation.
+- Added behavior to the teleport brick.
+- Changed level 9.
+
+## 0.1.0-alpha-1 (2023-10-21)
 
 - Added level 9.
 - Added parashute behavior for the ball.

@@ -178,7 +178,6 @@ func freeze_enemies(value := false):
 func remove_brick(body):
 	%Bricks.remove_child(body)
 	body.queue_free()
-	prints("Remove brick, left:", %Bricks.get_child_count())
 	if %Bricks.get_child_count() <= min_bricks_count:
 		stop()
 		$AudioSuccess.play()
@@ -217,7 +216,6 @@ func _on_piston_top():
 
 
 func _on_piston_bottom():
-	prints("_onPistonBottom")
 	round_init()
 
 
@@ -264,8 +262,17 @@ func _on_player_active():
 	is_ready_to_start = true
 
 
-func _on_brick_hit(body: StaticBody2D):
-	score.emit(body.score)
+func _on_brick_hit(brick: StaticBody2D, ball: Node2D):
+	if brick.is_teleport():
+		var destination_brick := brick
+		while destination_brick == brick:
+			var i := randi_range(0, $Levels.teleports.size() - 1)
+			destination_brick = $Levels.teleports[i]
+			if destination_brick.is_teleporting:
+				destination_brick = brick
+		destination_brick.teleport_in(ball)
+	else:
+		score.emit(brick.score)
 
 
 func _on_brick_crashed(body: StaticBody2D):

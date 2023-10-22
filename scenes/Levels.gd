@@ -16,6 +16,7 @@ var cfg := ConfigFile.new()
 var status := cfg.load("res://levels.cfg")
 
 var static_bricks_count: int = 0
+var teleports: Array[StaticBody2D] = []
 
 func add_brick(brick, brick_type):
 	var root: Node2D = $".."
@@ -30,6 +31,7 @@ func setup_bricks(level: int):
 		return
 	var section := "Level%s" % String.num(level).pad_zeros(2)
 	static_bricks_count = 0
+	teleports.clear()
 
 	if not cfg.has_section(section):
 		printerr("Section '$s' is not exists" % section)
@@ -51,10 +53,15 @@ func setup_bricks(level: int):
 					is_animation_set = true
 					%CoveredBody.position = brick.position + Vector2(STEP_X / 2.0, STEP_Y)
 					%CoveredBody.show()
-					%AnimationCovered.play()
+					var animation_names: PackedStringArray = %AnimationCovered.sprite_frames.get_animation_names()
+					var i := randi_range(0, animation_names.size() - 1)
+					%AnimationCovered.play(animation_names[i])
 			else:
 				brick.position = Vector2(col * STEP_X + START_X, row * STEP_Y + START_Y)
 
 			add_brick(brick, brick_type)
 			if brick_type == brick.BrickType.STATIC:
 				static_bricks_count += 1
+			if brick_type == brick.BrickType.TELEPORT:
+				static_bricks_count += 1
+				teleports.append(brick)

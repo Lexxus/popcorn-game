@@ -2,8 +2,12 @@ extends StaticBody2D
 
 enum BrickType {NONE, GEN1, GEN2, EXTRA1, EXTRA2, EXTRA3, EXTRA4, STATIC, ESCAPE, COVER, TELEPORT}
 
-signal hit(body)
+signal hit(brick: StaticBody2D, body: Node2D)
 signal crashed(body)
+
+
+const INACTIVE_DELAY_IN = 4.0
+const INACTIVE_DELAY_OUT = 7.0
 
 var extra1_texture: Texture2D = preload("res://sprites/bricks/brick-1.png")
 var extra2_texture: Texture2D = preload("res://sprites/bricks/brick-2.png")
@@ -16,6 +20,10 @@ var gen_texture: Texture2D
 var color: Color
 var color1 := Color(1, 0, 1, 1)
 var color2 := Color(0, 1, 1, 1)
+
+var is_teleporting := false
+var is_active := true
+var teleporting_ball: CollisionObject2D
 
 @export var type: BrickType = BrickType.GEN1
 @export var score: int = 20
@@ -50,21 +58,38 @@ func init(brick_type: BrickType):
 			sprite.texture = extra4_texture
 			hits = 4
 		BrickType.STATIC:
-			sprite.hide()
-			$Animations.show()
-			$Animations.set_animation("ice")
-			hits = 0
-			score = 0
+			init_special_brick(&"ice")
 		BrickType.ESCAPE:
 			sprite.texture = escape_texture
 		BrickType.COVER:
 			sprite.texture = cover_texture
+		BrickType.TELEPORT:
+			init_special_brick(&"teleport")
 
 
-func punch(instant: bool = false):
-	hit.emit(self)
+func init_special_brick(key: StringName):
+	sprite.hide()
+	$Animations.show()
+	$Animations.set_animation(key)
+	hits = 0
+	score = 0
+
+
+func punch(body: Node2D):
+	if type == BrickType.TELEPORT:
+		# ignore if the TELEPORT brick has been hit by a bullet
+		if not body.is_in_group(&"destructor") or not is_active:
+			return
+		body.stop()
+		body.hide()
+		wait_inactive(INACTIVE_DELAY_IN)
+	hit.emit(self, body)
 	if type == BrickType.STATIC:
-		$Animations.play("ice")
+		$AudioStatic.play()
+	else:
+		$AudioCrash.play()
+	if type == BrickType.STATIC or type == BrickType.TELEPORT:
+		$Animations.play()
 		return
 	hits -= 1
 	match hits:
@@ -80,18 +105,39 @@ func punch(instant: bool = false):
 			sprite.texture = extra3_texture
 			type = BrickType.EXTRA3
 			score = 30
-			
-	if instant and hits <= 0:
-		crashed.emit(self)
+
+
+func is_teleport():
+	return type == BrickType.TELEPORT
+
+
+func teleport_in(ball: CollisionObject2D):
+	if type == BrickType.TELEPORT:
+		is_teleporting = true
+		teleporting_ball = ball
+		$Animations.play_backwards()
+		wait_inactive(INACTIVE_DELAY_OUT)
+
+
+func wait_inactive(timeout: float):
+	is_active = false
+	await get_tree().create_timer(timeout).timeout
+	is_active = true
+
+
+func _on_animation_finished():
+	if is_teleporting:
+		is_teleporting = false
+		var dir := Lib.get_free_direction(self)
+		var target = position + (dir * 36)
+		teleporting_ball.move_to(target)
+		teleporting_ball.show()
+		teleporting_ball.release()
 
 
 func _on_area_2d_body_shape_entered(_body_rid, body, _body_shape_index, _local_shape_index):
 	if body.is_in_group(&"destructor"):
-		if type == BrickType.STATIC:
-			$AudioStatic.play()
-		else:
-			$AudioCrash.play()
-		punch()
+		punch(body)
 		if type == BrickType.ESCAPE:
 			body.fall_down()
 		else:
@@ -99,5 +145,5 @@ func _on_area_2d_body_shape_entered(_body_rid, body, _body_shape_index, _local_s
 
 
 func _on_audio_crash_finished():
-	if hits <= 0:
+	if hits <= 0 and type != BrickType.STATIC and type != BrickType.TELEPORT:
 		crashed.emit(self)

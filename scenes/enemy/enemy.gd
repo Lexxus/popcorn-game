@@ -48,35 +48,21 @@ func freeze(value: bool):
 
 
 func update_direction():
-	var list := [Vector2.UP, Vector2.LEFT, Vector2.DOWN, Vector2.RIGHT] as Array[Vector2]
-	var is_dir_found := false
-
 	if not timer.is_stopped():
 		timer.stop()
 
-	while list.size() > 0 and not is_dir_found:
-		var i = randi_range(0, list.size() - 1)
-		var dir = list[i]
-		list.remove_at(i)
-		if is_direction_free(dir):
-			prints(enemy_type, "direction", dir, "is free")
-			direction = dir
-			is_dir_found = true
-	if not is_dir_found:
-		direction = Vector2.ZERO
-		print("!!!Enemy direction is not found")
+	direction = Lib.get_free_direction(self)
 	timer.start(randi_range(MIN_TIMEOUT, MAX_TIMEOUT))
 
 
-func punch(silent := false):
+func punch(_body: Node2D):
 	if not is_active: return
 	if not timer.is_stopped(): timer.stop()
 	is_active = false
 	sprite.hide()
 	$Explosion.show()
 	$Explosion.play(&"default")
-	if not silent:
-		$AudioExplosion.play()
+	$AudioExplosion.play()
 
 
 func _process(delta):
@@ -95,15 +81,7 @@ func _on_body_entered(body):
 	if not is_active: return
 	if body.is_in_group(&"destructor"):
 		prints(enemy_type, "collision:", body.name, position)
-		call_deferred("punch")
-
-
-func is_direction_free(dir: Vector2):
-	var space_state := get_world_2d().direct_space_state
-	var aim: Vector2 = global_position + (dir * 40)
-	var query := PhysicsRayQueryParameters2D.create(global_position, aim, 0b100)
-
-	return space_state.intersect_ray(query).is_empty()
+		call_deferred("punch", body)
 
 
 func _on_explosion_finished():

@@ -15,5 +15,5 @@ func _process(delta):
 func _on_body_entered(body):
 	speed = 0
 	if body.has_method("punch"):
-		body.call_deferred("punch", true)
+		body.call_deferred("punch", self)
 	hit.emit(self)

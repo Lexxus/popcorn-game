@@ -42,6 +42,8 @@ func init(bonus_type: Lib.Bonus, pos: Vector2):
 		Lib.Bonus.LIFE:
 			label.text = 'V'
 			$Sprite2D.self_modulate = Color(0, 1, 0.4, 1)
+		Lib.Bonus.NEXT:
+			label.text = '+'
 	position = pos
 	name = "Bonus" + String.num(type)
 
