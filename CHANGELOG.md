@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.0-alpha-3 (2023-10-27)
+
+- Added levels 10, 11, 12.
+- Fixed parashute.
+
 ## 0.1.0-alpha-2 (2023-10-22)
 
 - Added ball covered animation.

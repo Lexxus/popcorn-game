@@ -17,19 +17,18 @@ var is_invert := false
 var is_falling_down := false
 var angle_delta: float = 0
 var velocity_backup: Vector2
-var collision_layer_backup: int = 0
+var collision_mask_backup: int = 0
 var stuck_check_count: int = 0
 
 
 func _integrate_forces(_state):
-	if angle_delta != 0 and linear_velocity.angle() < 0:
+	if angle_delta != 0 and linear_velocity.angle() <= 0:
 		var new_angle := linear_velocity.angle() + angle_delta
 		# preventing horizontal movement of the ball
 		if new_angle > MIN_ANGLE:
 			new_angle = MIN_ANGLE
 		elif new_angle < MAX_ANGLE:
 			new_angle = MAX_ANGLE
-		# linear_velocity = Vector2(cos(angle_delta) * speed, sin(angle_delta) * speed)
 		linear_velocity = Vector2.from_angle(new_angle) * speed
 		angle_delta = 0
 	elif is_speed_correction:
@@ -98,8 +97,8 @@ func invert():
 
 func fall_down():
 	set_deferred("freeze", true)
-	collision_layer_backup = collision_layer
-	collision_layer = 0b10000
+	collision_mask_backup = collision_mask
+	collision_mask = 0
 	is_falling_down = true
 	$Sprite2D.hide()
 	$Parashute.show()
@@ -112,5 +111,5 @@ func catch():
 		$Parashute.stop()
 		$Parashute.hide()
 		$Sprite2D.show()
-		collision_layer = collision_layer_backup
+		collision_mask = collision_mask_backup
 		set_deferred("freeze", false)

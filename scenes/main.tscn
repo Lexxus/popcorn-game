@@ -43,7 +43,7 @@ region_rect = Rect2(0, 0, 1152, 720)
 offset_left = 1049.0
 offset_right = 1148.0
 offset_bottom = 26.0
-text = "v.0.1.0-alpha-1"
+text = "v.0.1.0-alpha-3"
 label_settings = SubResource("LabelSettings_huecg")
 horizontal_alignment = 2
 

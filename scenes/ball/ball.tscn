@@ -82,7 +82,6 @@ physics_material_override = SubResource("PhysicsMaterial_couyr")
 gravity_scale = 0.0
 can_sleep = false
 lock_rotation = true
-freeze_mode = 1
 linear_damp_mode = 1
 script = ExtResource("1_hw28v")
 
