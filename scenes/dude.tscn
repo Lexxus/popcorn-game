@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://cwi2sk6qyu85"]
+
+[ext_resource type="Texture2D" uid="uid://yc622j38epg8" path="res://sprites/dude-naked.png" id="1_8o40j"]
+[ext_resource type="Script" path="res://scenes/dude.gd" id="1_tgndl"]
+[ext_resource type="Texture2D" uid="uid://cqohf4gd2hf6l" path="res://sprites/dude.png" id="2_7dcpw"]
+
+[node name="Dude" type="Node2D"]
+script = ExtResource("1_tgndl")
+
+[node name="DudeNaked" type="Sprite2D" parent="."]
+texture_filter = 2
+texture = ExtResource("1_8o40j")
+centered = false
+offset = Vector2(0, 332)
+region_enabled = true
+region_rect = Rect2(0, 332, 282, 0)
+
+[node name="DudeFull" type="Sprite2D" parent="."]
+texture = ExtResource("2_7dcpw")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 284, 0)
+
+[node name="Line" type="Polygon2D" parent="."]
+position = Vector2(0, 332)
+polygon = PackedVector2Array(0, 0, 284, 0, 284, 3, 0, 3)

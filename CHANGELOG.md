@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.0-alpha-4 (2023-10-28)
+
+- Added dude.
+
 ## 0.1.0-alpha-3 (2023-10-27)
 
 - Added levels 10, 11, 12.

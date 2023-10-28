@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://c754lbfx0yrpu"]
+[gd_scene load_steps=17 format=3 uid="uid://c754lbfx0yrpu"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_6th85"]
 [ext_resource type="Texture2D" uid="uid://c83gdpjarkbf0" path="res://sprites/logo.png" id="2_wri5c"]
 [ext_resource type="PackedScene" uid="uid://bfma08bavkmdm" path="res://scenes/level.tscn" id="3_bprjs"]
 [ext_resource type="Texture2D" uid="uid://bf7vln4ryf1cw" path="res://sprites/board.png" id="3_tm6bs"]
 [ext_resource type="Texture2D" uid="uid://dr264d4ayke5e" path="res://sprites/score.png" id="4_6uknk"]
+[ext_resource type="PackedScene" uid="uid://cwi2sk6qyu85" path="res://scenes/dude.tscn" id="4_sc7tv"]
 [ext_resource type="Texture2D" uid="uid://d3h88hip7jfxw" path="res://sprites/game-over.png" id="6_epck0"]
 [ext_resource type="Script" path="res://scenes/Lives.gd" id="6_n34hd"]
 [ext_resource type="Texture2D" uid="uid://blcdpdt34eqli" path="res://sprites/live.png" id="7_3iohd"]
@@ -31,6 +32,8 @@ bg_color = Color(1, 0, 1, 1)
 [node name="Main" type="Node2D"]
 texture_filter = 1
 script = ExtResource("1_6th85")
+metadata/_edit_vertical_guides_ = [956.0]
+metadata/_edit_horizontal_guides_ = [458.0, 430.0, 579.0]
 
 [node name="Background" type="Sprite2D" parent="."]
 self_modulate = Color(0, 0, 0, 1)
@@ -43,7 +46,7 @@ region_rect = Rect2(0, 0, 1152, 720)
 offset_left = 1049.0
 offset_right = 1148.0
 offset_bottom = 26.0
-text = "v.0.1.0-alpha-3"
+text = "v.0.1.0-alpha-4"
 label_settings = SubResource("LabelSettings_huecg")
 horizontal_alignment = 2
 
@@ -61,7 +64,11 @@ texture_filter = 1
 position = Vector2(948, 192)
 texture = ExtResource("2_wri5c")
 
+[node name="Dude" parent="." instance=ExtResource("4_sc7tv")]
+position = Vector2(814, 387)
+
 [node name="Board" type="Node2D" parent="."]
+visible = false
 position = Vector2(748, 384)
 
 [node name="Sprite2D" type="Sprite2D" parent="Board"]
@@ -151,5 +158,6 @@ ignore_texture_size = true
 [connection signal="reset" from="Level" to="." method="_on_level_reset"]
 [connection signal="round_fail" from="Level" to="." method="_on_level_round_fail"]
 [connection signal="score" from="Level" to="." method="_on_level_score"]
+[connection signal="done" from="Dude" to="." method="_on_dude_done"]
 [connection signal="pressed" from="Pause/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="Pause/QuitButton" to="." method="_on_quit_button_pressed"]

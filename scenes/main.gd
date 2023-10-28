@@ -27,12 +27,10 @@ func _ready():
 	for i in INITIAL_LIVES:
 		board_lives.add_live()
 	logo_y = logo.position.y
-	board_y = board.position.y
 	bg_x = bg.position.x
 	logo.position = Vector2(logo.position.x, -logo.position.y)
-	board.position = Vector2(board.position.x, Lib.PLAY_WIDTH_HEIGHT)
 	bg.position = Vector2(ProjectSettings["display/window/size/viewport_width"], bg.position.y)
-	$Level.start()
+	$Dude.start()
 
 
 func _process(delta):
@@ -143,3 +141,10 @@ func _on_quit_button_pressed():
 func _on_level_reset():
 	f_progress_stop()
 	m_progress_stop()
+
+
+func _on_dude_done():
+	board_y = board.position.y
+	board.position = Vector2(board.position.x, Lib.PLAY_WIDTH_HEIGHT)
+	board.show()
+	$Level.start()
