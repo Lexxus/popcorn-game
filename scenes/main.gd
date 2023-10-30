@@ -5,10 +5,17 @@ const INITIAL_LIVES = 5
 const LOGO_SPEED = 250
 const BOARD_SPEED = 230
 const BG_SPEED = 300
+const MENU_LINE_SPEED = 100
+const MENU_BTN_X = 246
+const MENU_BTN_WIDTH = 256
+const MENU_BTN_SPEED = 1000
 var score: int = 0
 var logo_y: float = 0
 var board_y: float = 0
 var bg_x: float = 0
+var menu_line_progress: float = 0
+var menu_buttons: Array[Button] = []
+var menu_btn_move: int = 0
 
 var f_progress: float = 0
 var m_progress: float = 0
@@ -20,10 +27,20 @@ var is_game_paused := false
 @onready var board_lives = $Board/Lives
 @onready var logo = $Logo
 @onready var bg = $LogoBg
+@onready var menu: Node2D = $Menu
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	var btn: Button = $Menu/NewGameButton
+	btn.position.x = -MENU_BTN_WIDTH
+	menu_buttons.append(btn)
+	btn = $Menu/ContinueButton
+	btn.position.x = -MENU_BTN_WIDTH
+	menu_buttons.append(btn)
+	btn = $Menu/ScoreButton
+	btn.position.x = -MENU_BTN_WIDTH
+	menu_buttons.append(btn)
 	for i in INITIAL_LIVES:
 		board_lives.add_live()
 	logo_y = logo.position.y
@@ -59,6 +76,19 @@ func _process(delta):
 		if board.position.y <= board_y:
 			board.position.y = board_y
 			board_y = 0
+	if menu_line_progress < 100:
+		menu_line_progress += MENU_LINE_SPEED * delta
+		if menu_line_progress >= 100: menu_line_progress = 100
+		$Menu/Line1.value = menu_line_progress
+		$Menu/Line2.value = menu_line_progress
+		$Menu/Line3.value = menu_line_progress
+		$Menu/Line4.value = menu_line_progress
+	elif menu_btn_move < menu_buttons.size():
+		var btn := menu_buttons[menu_btn_move]
+		btn.position.x += MENU_BTN_SPEED * delta
+		if btn.position.x >= MENU_BTN_X:
+			btn.position.x = MENU_BTN_X
+			menu_btn_move += 1
 	if f_progress > 0:
 		f_progress -= delta
 		if f_progress <= 0:
@@ -143,8 +173,10 @@ func _on_level_reset():
 	m_progress_stop()
 
 
-func _on_dude_done():
+func _on_new_game():
 	board_y = board.position.y
 	board.position = Vector2(board.position.x, Lib.PLAY_WIDTH_HEIGHT)
 	board.show()
+	$Menu.hide()
+	$Level.show()
 	$Level.start()

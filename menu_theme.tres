@@ -1,0 +1,25 @@
+[gd_resource type="Theme" load_steps=7 format=3 uid="uid://bv4aqck3py8f1"]
+
+[ext_resource type="FontFile" uid="uid://b2jdjahx3jaha" path="res://ConcertOne-Regular.ttf" id="1_qqcja"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ocodl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f1ci7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hjhtu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7pow6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dvuaf"]
+
+[resource]
+Button/colors/font_color = Color(0.87451, 0.254902, 0.87451, 1)
+Button/colors/font_focus_color = Color(0.94902, 0.254902, 0.94902, 1)
+Button/colors/font_hover_color = Color(0.94902, 0.498039, 0.94902, 1)
+Button/font_sizes/font_size = 50
+Button/fonts/font = ExtResource("1_qqcja")
+Button/styles/disabled = SubResource("StyleBoxEmpty_ocodl")
+Button/styles/focus = SubResource("StyleBoxEmpty_f1ci7")
+Button/styles/hover = SubResource("StyleBoxEmpty_hjhtu")
+Button/styles/normal = SubResource("StyleBoxEmpty_7pow6")
+Button/styles/pressed = SubResource("StyleBoxEmpty_dvuaf")

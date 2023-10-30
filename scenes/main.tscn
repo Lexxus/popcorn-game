@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://c754lbfx0yrpu"]
+[gd_scene load_steps=19 format=3 uid="uid://c754lbfx0yrpu"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_6th85"]
 [ext_resource type="Texture2D" uid="uid://c83gdpjarkbf0" path="res://sprites/logo.png" id="2_wri5c"]
@@ -11,8 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://blcdpdt34eqli" path="res://sprites/live.png" id="7_3iohd"]
 [ext_resource type="Script" path="res://scenes/GameOver.gd" id="7_7175p"]
 [ext_resource type="Texture2D" uid="uid://dl7fsvgtatevi" path="res://sprites/pause.png" id="10_i8ilp"]
-
-[sub_resource type="CanvasTexture" id="CanvasTexture_23k7w"]
+[ext_resource type="Theme" uid="uid://bv4aqck3py8f1" path="res://menu_theme.tres" id="12_yrjwq"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_huecg"]
 font_size = 12
@@ -29,24 +28,36 @@ shadow_offset = Vector2(5, 5)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7f3l2"]
 bg_color = Color(1, 0, 1, 1)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_80ufm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_62m5u"]
+bg_color = Color(0, 1, 1, 0.780392)
+
 [node name="Main" type="Node2D"]
 texture_filter = 1
 script = ExtResource("1_6th85")
 metadata/_edit_vertical_guides_ = [956.0]
 metadata/_edit_horizontal_guides_ = [458.0, 430.0, 579.0]
 
-[node name="Background" type="Sprite2D" parent="."]
-self_modulate = Color(0, 0, 0, 1)
-position = Vector2(576, 360)
-texture = SubResource("CanvasTexture_23k7w")
-region_enabled = true
-region_rect = Rect2(0, 0, 1152, 720)
+[node name="Background" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(1152, 720)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1152.0
+offset_bottom = 720.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [node name="Version" type="Label" parent="."]
 offset_left = 1049.0
 offset_right = 1148.0
 offset_bottom = 26.0
-text = "v.0.1.0-alpha-4"
+text = "v.0.2.0-alpha"
 label_settings = SubResource("LabelSettings_huecg")
 horizontal_alignment = 2
 
@@ -150,6 +161,70 @@ offset_right = 198.0
 offset_bottom = 85.0
 ignore_texture_size = true
 
+[node name="Menu" type="Node2D" parent="."]
+
+[node name="Line1" type="ProgressBar" parent="Menu"]
+offset_top = 100.0
+offset_right = 720.0
+offset_bottom = 104.0
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_80ufm")
+theme_override_styles/fill = SubResource("StyleBoxFlat_62m5u")
+show_percentage = false
+
+[node name="NewGameButton" type="Button" parent="Menu"]
+offset_left = 246.0
+offset_top = 118.0
+offset_right = 502.0
+offset_bottom = 168.0
+theme = ExtResource("12_yrjwq")
+text = "New Game"
+
+[node name="Line2" type="ProgressBar" parent="Menu"]
+offset_top = 200.0
+offset_right = 720.0
+offset_bottom = 204.0
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_80ufm")
+theme_override_styles/fill = SubResource("StyleBoxFlat_62m5u")
+show_percentage = false
+
+[node name="ContinueButton" type="Button" parent="Menu"]
+offset_left = 246.0
+offset_top = 217.0
+offset_right = 502.0
+offset_bottom = 267.0
+theme = ExtResource("12_yrjwq")
+disabled = true
+text = "Continue"
+
+[node name="Line3" type="ProgressBar" parent="Menu"]
+offset_top = 300.0
+offset_right = 720.0
+offset_bottom = 304.0
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_80ufm")
+theme_override_styles/fill = SubResource("StyleBoxFlat_62m5u")
+show_percentage = false
+
+[node name="ScoreButton" type="Button" parent="Menu"]
+offset_left = 246.0
+offset_top = 316.0
+offset_right = 502.0
+offset_bottom = 366.0
+theme = ExtResource("12_yrjwq")
+disabled = true
+text = "Score Board"
+
+[node name="Line4" type="ProgressBar" parent="Menu"]
+offset_top = 400.0
+offset_right = 720.0
+offset_bottom = 404.0
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_80ufm")
+theme_override_styles/fill = SubResource("StyleBoxFlat_62m5u")
+show_percentage = false
+
 [connection signal="f_start" from="Level" to="." method="_on_level_f_start"]
 [connection signal="level_up" from="Level" to="." method="_on_level_up"]
 [connection signal="live_add" from="Level" to="." method="_on_live_add"]
@@ -158,6 +233,6 @@ ignore_texture_size = true
 [connection signal="reset" from="Level" to="." method="_on_level_reset"]
 [connection signal="round_fail" from="Level" to="." method="_on_level_round_fail"]
 [connection signal="score" from="Level" to="." method="_on_level_score"]
-[connection signal="done" from="Dude" to="." method="_on_dude_done"]
 [connection signal="pressed" from="Pause/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="Pause/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="Menu/NewGameButton" to="." method="_on_new_game"]

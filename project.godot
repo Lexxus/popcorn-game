@@ -22,7 +22,7 @@ Lib="*res://scenes/lib.gd"
 [display]
 
 window/size/viewport_height=720
-window/size/resizable=false
+window/stretch/mode="canvas_items"
 
 [input]
 

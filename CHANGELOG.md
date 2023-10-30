@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0-alpha (2023-10-30)
+
+- Created the game menu.
+
 ## 0.1.0-alpha-4 (2023-10-28)
 
 - Added dude.

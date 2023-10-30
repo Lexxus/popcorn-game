@@ -6,7 +6,7 @@ var PLAY_WIDTH_HEIGHT: int = ProjectSettings["display/window/size/viewport_heigh
 enum Bonus {NONE, EXTEND, IMPULSE, RESET, GLUE, SLOW, FIRE, FREEZE, SPLIT, WALL, LIFE, NEXT}
 
 static var list: Dictionary = {
-	Bonus.NONE: 100,
+	Bonus.NONE: 200,
 	Bonus.EXTEND: 4,
 	Bonus.IMPULSE: 4,
 	Bonus.RESET: 4,
@@ -16,7 +16,7 @@ static var list: Dictionary = {
 	Bonus.FREEZE: 3,
 	Bonus.SPLIT: 2,
 	Bonus.WALL: 3,
-	Bonus.LIFE: 2,
+	Bonus.LIFE: 1,
 	Bonus.NEXT: 1
 }
 
