@@ -46,10 +46,7 @@ func init(bonus_type: Lib.Bonus, pos: Vector2):
 			label.text = '+'
 	position = pos
 	name = "Bonus" + String.num(type)
-
-
-func pause(value: bool):
-	is_paused = value
+	Lib.connect(&"message", _on_message)
 
 
 func _process(delta):
@@ -73,3 +70,8 @@ func _process(delta):
 
 func _on_body_entered(_body):
 	catch.emit(self)
+
+
+func _on_message(msg: StringName, param):
+	if msg == &"pause":
+		is_paused = param as bool

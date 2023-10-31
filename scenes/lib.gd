@@ -1,5 +1,7 @@
 extends Node
 
+signal message(name: StringName, param)
+
 const PLAY_FIELD_WIDTH = 748.0
 var PLAY_WIDTH_HEIGHT: int = ProjectSettings["display/window/size/viewport_height"]
 
@@ -56,3 +58,7 @@ func get_free_direction(body: CanvasItem, distance: int = 40) -> Vector2:
 			return dir
 	printerr("!Direction is not found")
 	return Vector2.ZERO
+
+
+func sendMessage(msg: StringName, param):
+	message.emit(msg, param)

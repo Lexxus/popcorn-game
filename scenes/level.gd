@@ -37,6 +37,7 @@ var handler_gate_finish := ""
 
 func _ready():
 	$Wall.hide_wall()
+	Lib.connect(&"message", _on_message)
 
 
 func _process(_delta):
@@ -57,6 +58,8 @@ func start():
 
 func stop():
 	is_game_active = false
+	is_game_paused = false
+	is_ready_to_start = false
 	timer.stop()
 	# kill all enemies
 	for gate in $Gates.get_children():
@@ -81,32 +84,29 @@ func stop():
 		node.queue_free()
 
 
-func pause(value: bool) -> bool:
-	if not is_game_active: return false
+func quite():
+	stop()
+	$Gates.hide()
+	$Wall.hide_wall()
+	$LevelPanel.hide()
+	level = 1
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	hide()
+
+
+func pause(value: bool):
 	is_game_paused = value
+	if not is_game_active: return
 	if value:
 		%AnimationCovered.stop()
 	else:
 		%AnimationCovered.play()
-	for b in $Bonuses.get_children():
-		b.pause(value)
 	if value:
 		$Timer.stop()
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		for ball in balls_node.get_children():
-			ball.stop()
-		player.pause()
-		for gate in $Gates.get_children():
-			gate.pause_enemy()
 	else:
 		$Timer.start()
 		Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
-		for ball in balls_node.get_children():
-			ball.release()
-		player.release()
-		for gate in $Gates.get_children():
-			gate.unpause_enemy()
-	return true
 
 
 func next_level():
@@ -247,7 +247,7 @@ func _on_gate_finish(body):
 
 
 func _on_timer_timeout():
-	if not is_game_active: return
+	if not is_game_active or is_game_paused: return
 	for i in max_enemies:
 		if randf() > 0.5:
 			var gate = $Gates.get_child(i)
@@ -338,3 +338,8 @@ func _on_player_falled():
 
 func _on_enemy_die(_type):
 	score.emit(ENEMY_SCORE)
+
+
+func _on_message(msg: StringName, param):
+	if msg == &"pause":
+		pause(param as bool)

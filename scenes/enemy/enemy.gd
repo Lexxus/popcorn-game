@@ -22,6 +22,10 @@ var enemy_type: StringName
 var proc_cycles_to_off: int = 10
 
 
+func _init():
+	Lib.connect(&"message", _on_message)
+
+
 func start(start_direction: Vector2):
 	var list := sprite.sprite_frames.get_animation_names()
 	var i := randi_range(0, list.size() - 1)
@@ -40,6 +44,10 @@ func start(start_direction: Vector2):
 
 
 func freeze(value: bool):
+	is_freezed = value
+
+
+func pause(value: bool):
 	is_freezed = value
 	if value:
 		sprite.pause()
@@ -86,3 +94,8 @@ func _on_body_entered(body):
 
 func _on_explosion_finished():
 	die.emit(self)
+
+
+func _on_message(msg: StringName, param):
+	if msg == &"pause":
+		pause(param)

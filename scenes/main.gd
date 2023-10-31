@@ -19,6 +19,7 @@ var menu_btn_move: int = 0
 
 var f_progress: float = 0
 var m_progress: float = 0
+var is_playing := false
 var is_game_paused := false
 
 @onready var f_progress_bar = $Board/FProgressBar
@@ -41,6 +42,9 @@ func _ready():
 	btn = $Menu/ScoreButton
 	btn.position.x = -MENU_BTN_WIDTH
 	menu_buttons.append(btn)
+	btn = $Menu/QuitButton
+	btn.position.x = -MENU_BTN_WIDTH
+	menu_buttons.append(btn)
 	for i in INITIAL_LIVES:
 		board_lives.add_live()
 	logo_y = logo.position.y
@@ -52,12 +56,13 @@ func _ready():
 
 func _process(delta):
 	if Input.is_action_just_pressed("pause"):
-		if $Level.pause(not is_game_paused):
-			is_game_paused = not is_game_paused
-			if is_game_paused:
-				$Pause.show()
-			else:
-				$Pause.hide()
+		if not is_playing: return
+		is_game_paused = not is_game_paused
+		Lib.sendMessage(&"pause", is_game_paused)
+		if is_game_paused:
+			$Pause.show()
+		else:
+			$Pause.hide()
 
 	if is_game_paused: return
 	if bg_x > 0:
@@ -83,6 +88,7 @@ func _process(delta):
 		$Menu/Line2.value = menu_line_progress
 		$Menu/Line3.value = menu_line_progress
 		$Menu/Line4.value = menu_line_progress
+		$Menu/Line5.value = menu_line_progress
 	elif menu_btn_move < menu_buttons.size():
 		var btn := menu_buttons[menu_btn_move]
 		btn.position.x += MENU_BTN_SPEED * delta
@@ -159,13 +165,23 @@ func _on_live_remove():
 
 
 func _on_play_button_pressed():
-	if is_game_paused and $Level.pause(false):
-		$Pause.hide()
+	if is_game_paused:
 		is_game_paused = false
+		$Pause.hide()
+		Lib.sendMessage(&"pause", is_game_paused)
+
+
+func _on_exit_button_pressed():
+	get_tree().quit()
 
 
 func _on_quit_button_pressed():
-	get_tree().quit()
+	is_playing = false
+	is_game_paused = false
+	$Pause.hide()
+	$Level.quite()
+	$Menu.show()
+	board.hide()
 
 
 func _on_level_reset():
@@ -180,3 +196,4 @@ func _on_new_game():
 	$Menu.hide()
 	$Level.show()
 	$Level.start()
+	is_playing = true

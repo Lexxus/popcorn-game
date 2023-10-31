@@ -15,6 +15,7 @@ var stick_texture := preload("res://sprites/player/roket-stick.png") as Texture2
 var init_texture: Texture2D
 
 var is_active := false
+var is_paused := false
 var is_rolling_in := false
 var mode := Mode.NORMAL
 var deffered_set_mode := ""
@@ -27,6 +28,7 @@ var is_fire_allow := true
 func _ready():
 	init_texture = $Roket.texture
 	y = position.y
+	Lib.connect(&"message", _on_message)
 
 
 func start():
@@ -38,15 +40,8 @@ func start():
 
 func stop():
 	is_active = false
+	is_paused = false
 	set_normal_mode()
-
-
-func pause():
-	is_active = false
-
-
-func release():
-	is_active = true
 
 
 func fall():
@@ -74,6 +69,7 @@ func open():
 
 
 func _process(delta):
+	if is_paused: return
 	if is_rolling_in:
 		position.x -= ROLLING_SPEED * delta
 		if position.x <= CENTER_X:
@@ -113,7 +109,7 @@ func _physics_process(_delta):
 
 
 func _unhandled_input(event):
-	if is_active and event is InputEventMouseMotion:
+	if is_active and not is_paused and event is InputEventMouseMotion:
 		var delta_x: float = event.relative.x
 		if delta_x != 0:
 			move_and_collide(Vector2(delta_x, 0))
@@ -212,3 +208,8 @@ func _on_animation_finished():
 
 func _on_fall_animation_finished():
 	falled.emit()
+
+
+func _on_message(msg: StringName, param):
+	if msg == &"pause":
+		is_paused = param

@@ -21,6 +21,10 @@ var collision_mask_backup: int = 0
 var stuck_check_count: int = 0
 
 
+func _init():
+	Lib.connect(&"message", _on_message)
+
+
 func _integrate_forces(_state):
 	if angle_delta != 0 and linear_velocity.angle() <= 0:
 		var new_angle := linear_velocity.angle() + angle_delta
@@ -113,3 +117,11 @@ func catch():
 		$Sprite2D.show()
 		collision_mask = collision_mask_backup
 		set_deferred("freeze", false)
+
+
+func _on_message(msg: StringName, param):
+	if msg == &"pause":
+		if param and not freeze:
+			stop()
+		elif not param and freeze:
+			release()

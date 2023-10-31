@@ -20,6 +20,7 @@ var is_anim_paused := false
 
 func _ready():
 	dir_vector = Vector2.LEFT if direction == DirectionEnum.Left else Vector2.RIGHT;
+	Lib.connect(&"message", _on_message)
 
 
 func open():
@@ -82,25 +83,6 @@ func _create_enemy():
 	play_backwards(&"open_enemy")
 
 
-func pause_enemy():
-	if is_playing():
-		is_anim_paused = true
-		pause()
-	if has_enemy:
-		get_child(0).freeze(true)
-
-
-func unpause_enemy():
-	if is_anim_paused:
-		if speed_scale < 0:
-			play_backwards()
-		else:
-			play()
-		is_anim_paused = false
-	if has_enemy:
-		get_child(0).freeze(false)
-
-
 func kill_enemy():
 	stop()
 	if has_enemy:
@@ -125,3 +107,14 @@ func _on_animation_finished():
 		callv(handle_animation_finished, [])
 		handle_animation_finished = &""
 	finish.emit(self)
+
+
+func _on_message(msg: StringName, param):
+	if msg == &"pause":
+		if param:
+			if is_playing():
+				stop()
+				is_anim_paused = true
+		elif is_anim_paused:
+			play()
+			is_anim_paused = false

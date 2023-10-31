@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1-alpha (2023-10-31)
+
+- Updated pause implementation by using global message bus.
+- Added Quit button into the menu.
+- Changed behavior of Quit button in the pause menu - now it quits to the main menu.
+
 ## 0.2.0-alpha (2023-10-30)
 
 - Created the game menu.
